@@ -1,16 +1,19 @@
-FROM node:18
+FROM node:22
 
 # Carpeta de trabajo
 WORKDIR /app
 
-# Copia package.json y package-lock.json si existen
+# Copiamos primero las dependencias
 COPY package*.json ./
 
-# Instalar dependencias si el proyecto ya tiene package.json
-RUN if [ -f package.json ]; then npm install; fi
+# Instalamos dependencias
+RUN npm install
 
-# Copia el resto del proyecto
+# Ahora copiamos el resto del proyecto
 COPY . .
 
-# Comando por defecto: iniciar el servidor Vite
+# Exponemos el puerto de Vite
+EXPOSE 5173
+
+# Comando por defecto
 CMD ["npm", "run", "dev", "--", "--host"]
