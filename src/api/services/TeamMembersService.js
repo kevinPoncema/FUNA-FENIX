@@ -81,21 +81,25 @@ export class TeamMembersService {
     }
 
     /**
-     * Actualiza los datos de un miembro (si el proveedor lo soporta)
+     * Actualiza los datos de un miembro
      * @param {string} memberId - ID del miembro
      * @param {Object} updateData - Datos a actualizar
      * @returns {Promise<Object>} Miembro actualizado
      */
     async updateMember(memberId, updateData) {
-        if (typeof this.provider.updateMember === 'function') {
-            try {
-                await delay(50);
-                return await this.provider.updateMember(memberId, updateData);
-            } catch (error) {
-                throw handleError(error, 'Error al actualizar miembro');
-            }
-        } else {
-            throw new Error('Operación de actualización no soportada por el proveedor actual');
+        if (!memberId) {
+            throw new Error('ID de miembro requerido');
+        }
+
+        if (!updateData || typeof updateData !== 'object') {
+            throw new Error('Datos de actualización requeridos');
+        }
+
+        try {
+            await delay(50);
+            return await this.provider.updateMember(memberId, updateData);
+        } catch (error) {
+            throw handleError(error, 'Error al actualizar miembro');
         }
     }
 

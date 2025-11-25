@@ -94,6 +94,47 @@ export class LocalStorageProvider extends IDataProvider {
     }
 
     /**
+     * Actualiza un miembro existente
+     */
+    async updateMember(memberId, updateData) {
+        this._ensureInitialized();
+        
+        if (!memberId) {
+            throw new Error('ID de miembro requerido');
+        }
+
+        const members = await this.getMembers();
+        const memberIndex = members.findIndex(member => member.id === memberId);
+        
+        if (memberIndex === -1) {
+            throw new Error('Miembro no encontrado');
+        }
+
+        // Validar datos de actualización
+        const validation = validateMemberData(updateData);
+        if (!validation.isValid) {
+            throw new Error(`Datos inválidos: ${validation.errors.join(', ')}`);
+        }
+
+        // Actualizar miembro
+        const updatedMember = {
+            ...members[memberIndex],
+            name: sanitizeString(updateData.name),
+            role: sanitizeString(updateData.role || 'Miembro de Equipo'),
+            updatedAt: getTimestamp()
+        };
+
+        members[memberIndex] = updatedMember;
+        
+        if (this._saveToStorage(STORAGE_KEYS.TEAM_MEMBERS, members)) {
+            this.eventEmitter.emit('membersChanged', members);
+            return updatedMember;
+        } else {
+            throw new Error('No se pudo actualizar el miembro');
+        }
+    }
+
+    /**
      * Elimina un miembro
      */
     async deleteMember(memberId) {

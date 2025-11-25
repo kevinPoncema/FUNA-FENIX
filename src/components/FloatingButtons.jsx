@@ -11,10 +11,10 @@ const FloatingButtons = ({ onOpenFeedbackModal, onOpenManagementModal }) => {
             {/* Botón para Administrar Equipo */}
             <button
                 onClick={onOpenManagementModal}
-                className="flex items-center gap-3 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-full text-white text-lg font-bold transition duration-300 shadow-2xl shadow-indigo-500/50 transform hover:scale-105"
+                className="flex items-center gap-3 px-6 py-3 bg-purple-500 hover:bg-purple-600 rounded-full text-white text-lg font-bold transition duration-300 shadow-2xl shadow-purple-500/50 transform hover:scale-105"
                 title="Administrar los miembros del equipo"
             >
-                <Settings size={20} /> Administrar Equipo
+                <Settings size={20} className="text-white" /> Administrar Equipo
             </button>
 
             {/* Botón para Añadir Post-it */}
@@ -23,7 +23,7 @@ const FloatingButtons = ({ onOpenFeedbackModal, onOpenManagementModal }) => {
                 className="flex items-center gap-3 px-6 py-4 bg-green-500 hover:bg-green-600 rounded-full text-white text-xl font-bold transition duration-300 shadow-2xl shadow-green-500/50 transform hover:scale-105"
                 title="Añadir un nuevo post-it"
             >
-                <Send size={24} /> Añadir Post-it
+                <Send size={24} className="text-white" /> Añadir Post-it
             </button>
         </div>
     );

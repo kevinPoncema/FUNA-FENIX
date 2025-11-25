@@ -151,6 +151,21 @@ export const useSimpleLocalStorage = () => {
         }
     }, [membersService, isInitialized]);
 
+    const updateMember = useCallback(async (memberId, updateData) => {
+        if (!isInitialized || !membersService) {
+            console.warn('Servicio no inicializado aún');
+            return;
+        }
+        
+        try {
+            console.log('Actualizando miembro:', memberId, updateData);
+            await membersService.updateMember(memberId, updateData);
+        } catch (error) {
+            console.error('Error al actualizar miembro:', error);
+            setError(error.message);
+        }
+    }, [membersService, isInitialized]);
+
     return {
         // Estado
         feedbackData,
@@ -166,6 +181,7 @@ export const useSimpleLocalStorage = () => {
         // Acciones de Miembros
         addMember,
         deleteMember,
+        updateMember,
         
         // Estado del sistema
         isInitialized

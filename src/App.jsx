@@ -23,7 +23,8 @@ const App = () => {
         addFeedback, 
         deleteFeedback, 
         addMember, 
-        deleteMember 
+        deleteMember,
+        updateMember
     } = useSimpleLocalStorage();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -125,6 +126,7 @@ const App = () => {
                 onClose={handleToggleManagementModal}
                 onAdd={addMember}
                 onDelete={deleteMember}
+                onUpdate={updateMember}
             />
             
             {/* Modal de Detalle de Post-it */}

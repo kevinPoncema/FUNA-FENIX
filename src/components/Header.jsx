@@ -16,13 +16,13 @@ const Header = () => {
             {/* Títulos de Categoría en la cabecera (para guía visual) */}
             <div className="mt-4 flex justify-center gap-10 text-lg font-bold text-white/90">
                 <span className="text-green-300 flex items-center gap-1">
-                    <Zap size={16}/> Logros
+                    <Zap size={16} className="text-green-300" /> Logros
                 </span>
                 <span className="text-yellow-200 flex items-center gap-1">
-                    <User size={16}/> Cualidades
+                    <User size={16} className="text-yellow-200" /> Cualidades
                 </span>
                 <span className="text-cyan-300 flex items-center gap-1">
-                    <ChevronsUp size={16}/> Potencial
+                    <ChevronsUp size={16} className="text-cyan-300" /> Potencial
                 </span>
             </div>
         </header>
