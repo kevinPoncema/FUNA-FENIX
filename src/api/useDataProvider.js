@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DataManager } from '../core/DataManager.js';
-import { DataProviderFactory } from '../core/DataProviderFactory.js';
+import { DataManager } from './core/DataManager.js';
+import { DataProviderFactory } from './core/DataProviderFactory.js';
 
 /**
  * Hook personalizado para manejar datos usando el nuevo sistema genérico
@@ -13,6 +13,7 @@ export const useDataProvider = (config = {}) => {
     const [feedbackData, setFeedbackData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     // Configuración por defecto
     const {
@@ -23,7 +24,7 @@ export const useDataProvider = (config = {}) => {
     } = config;
 
     useEffect(() => {
-        if (!autoInitialize) return;
+        if (!autoInitialize || isInitialized) return;
 
         const initializeApp = async () => {
             try {
@@ -38,6 +39,7 @@ export const useDataProvider = (config = {}) => {
                 });
 
                 setUserId(initResult.userId);
+                setIsInitialized(true);
 
                 // Configurar listeners para cambios de datos
                 const cleanup = dataManager.setupListeners({
@@ -74,53 +76,69 @@ export const useDataProvider = (config = {}) => {
                 });
             }
         };
-    }, [dataManager, providerType, providerConfig, useDefaultMembers, autoInitialize]);
+    }, [autoInitialize, isInitialized]); // Removí dataManager para evitar loops
 
     // Funciones de CRUD para Feedback
     const addFeedback = useCallback(async (newFeedback) => {
-        if (!dataManager.isInitialized) return;
+        if (!isInitialized) {
+            console.warn('DataManager no está inicializado aún');
+            return;
+        }
         
         try {
             const feedbackService = dataManager.getFeedbackService();
             await feedbackService.addFeedback(newFeedback);
         } catch (error) {
+            console.error('Error al añadir feedback:', error);
             setError(error.message);
         }
-    }, [dataManager]);
+    }, [dataManager, isInitialized]);
 
     const deleteFeedback = useCallback(async (id) => {
-        if (!dataManager.isInitialized) return;
+        if (!isInitialized) {
+            console.warn('DataManager no está inicializado aún');
+            return;
+        }
         
         try {
             const feedbackService = dataManager.getFeedbackService();
             await feedbackService.deleteFeedback(id);
         } catch (error) {
+            console.error('Error al eliminar feedback:', error);
             setError(error.message);
         }
-    }, [dataManager]);
+    }, [dataManager, isInitialized]);
 
     // Funciones de CRUD para Miembros
     const addMember = useCallback(async (name, role) => {
-        if (!dataManager.isInitialized) return;
+        if (!isInitialized) {
+            console.warn('DataManager no está inicializado aún');
+            return;
+        }
         
         try {
             const membersService = dataManager.getTeamMembersService();
             await membersService.addMember(name, role);
         } catch (error) {
+            console.error('Error al añadir miembro:', error);
             setError(error.message);
         }
-    }, [dataManager]);
+    }, [dataManager, isInitialized]);
 
     const deleteMember = useCallback(async (memberId) => {
-        if (!dataManager.isInitialized) return;
+        if (!isInitialized) {
+            console.warn('DataManager no está inicializado aún');
+            return;
+        }
         
         try {
             const membersService = dataManager.getTeamMembersService();
             await membersService.deleteMember(memberId);
         } catch (error) {
+            console.error('Error al eliminar miembro:', error);
             setError(error.message);
         }
-    }, [dataManager]);
+    }, [dataManager, isInitialized]);
 
     // Función para cambiar proveedor dinámicamente
     const changeProvider = useCallback(async (newProviderType, newConfig = {}) => {
@@ -207,7 +225,7 @@ export const useDataProvider = (config = {}) => {
         dataManager,
         
         // Estado del sistema
-        isInitialized: dataManager?.isInitialized || false,
+        isInitialized,
         status: dataManager?.getStatus() || {}
     };
 };
