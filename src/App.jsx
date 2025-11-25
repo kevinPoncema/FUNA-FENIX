@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useLocalStorageData } from './api/useFirestoreData.js';
+import { useLocalStorageData } from './api/useDataProvider.js';
 import Loading from './components/Loading.jsx';
 import ErrorDisplay from './components/ErrorDisplay.jsx';
 import Header from './components/Header.jsx';
