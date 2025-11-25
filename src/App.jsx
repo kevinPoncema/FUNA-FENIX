@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useFirestoreData } from './api/useFirestoreData.js';
+import { useLocalStorageData } from './api/useFirestoreData.js';
 import Loading from './components/Loading.jsx';
 import ErrorDisplay from './components/ErrorDisplay.jsx';
 import Header from './components/Header.jsx';
@@ -24,7 +24,7 @@ const App = () => {
         deleteFeedback, 
         addMember, 
         deleteMember 
-    } = useFirestoreData();
+    } = useLocalStorageData();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isManagementModalOpen, setIsManagementOpen] = useState(false);
