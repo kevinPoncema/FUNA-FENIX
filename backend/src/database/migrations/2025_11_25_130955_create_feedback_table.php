@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('target_id')->constrained('team_members')->cascadeOnDelete();
             $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('category', ['achi
-            // Clave foránea al User que da el feedback (author_id)
-            // Asume que la tabla 'users' ya existe o será creada.evements', 'qualities', 'potential']);
-
+            $table->enum('category', ['achievements', 'qualities', 'potential']);
             $table->string('title', 50);
             $table->string('text', 300);
 

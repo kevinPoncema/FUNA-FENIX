@@ -27,8 +27,4 @@ class Feedback extends Model
         return $this->belongsTo(TeamMember::class, 'target_id');
     }
 
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(\App\Models\User::class, 'author_id');
-    }
 }
