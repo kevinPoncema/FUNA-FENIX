@@ -12,6 +12,12 @@ export const useAPI = () => {
     const [teamMembers, setTeamMembers] = useState([]);
     const [feedbackData, setFeedbackData] = useState([]);
     const [isInitialized, setIsInitialized] = useState(false);
+    
+    // Sistema para evitar duplicados - guardamos timestamp de última acción
+    const [lastActionTime, setLastActionTime] = useState({
+        feedback: 0,
+        teamMember: 0,
+    });
 
     // Función para manejar errores
     const handleError = (error) => {
@@ -87,21 +93,52 @@ export const useAPI = () => {
         
         // Listener para feedback creado
         feedbackChannel.listen('FeedbackCreated', (data) => {
-            console.log('Feedback created:', data);
-            setFeedbackData(prev => [...prev, data.feedback]);
+            console.log('Feedback created via WebSocket:', data);
+            
+            // Verificamos que no sea muy reciente (evita duplicados de acciones locales)
+            const now = Date.now();
+            const timeSinceLastAction = now - lastActionTime.feedback;
+            
+            // Si pasó menos de 2 segundos desde la última acción local, podría ser duplicado
+            if (timeSinceLastAction < 2000) {
+                // Verificamos si ya existe en el estado
+                setFeedbackData(prev => {
+                    const exists = prev.some(feedback => feedback.id === data.feedback.id);
+                    if (exists) {
+                        console.log('Feedback creation ignored (already exists):', data.feedback.id);
+                        return prev;
+                    }
+                    return [...prev, data.feedback];
+                });
+            } else {
+                // Si pasó tiempo suficiente, es seguro añadir
+                setFeedbackData(prev => {
+                    const exists = prev.some(feedback => feedback.id === data.feedback.id);
+                    return exists ? prev : [...prev, data.feedback];
+                });
+            }
         });
 
         // Listener para feedback actualizado
         feedbackChannel.listen('FeedbackUpdated', (data) => {
-            console.log('Feedback updated:', data);
-            setFeedbackData(prev => prev.map(feedback => 
-                feedback.id === data.feedback.id ? data.feedback : feedback
-            ));
+            console.log('Feedback updated via WebSocket:', data);
+            
+            setFeedbackData(prev => {
+                const exists = prev.some(feedback => feedback.id === data.feedback.id);
+                if (!exists) {
+                    console.log('Feedback to update not found:', data.feedback.id);
+                    return prev;
+                }
+                return prev.map(feedback => 
+                    feedback.id === data.feedback.id ? data.feedback : feedback
+                );
+            });
         });
 
         // Listener para feedback eliminado
         feedbackChannel.listen('FeedbackDeleted', (data) => {
-            console.log('Feedback deleted:', data);
+            console.log('Feedback deleted via WebSocket:', data);
+            
             setFeedbackData(prev => prev.filter(feedback => feedback.id !== data.feedbackId));
         });
 
@@ -112,21 +149,52 @@ export const useAPI = () => {
             
             // Listener para miembro creado
             teamMemberChannel.listen('TeamMemberCreated', (data) => {
-                console.log('Team member created:', data);
-                setTeamMembers(prev => [...prev, data.teamMember]);
+                console.log('Team member created via WebSocket:', data);
+                
+                // Verificamos que no sea muy reciente (evita duplicados de acciones locales)
+                const now = Date.now();
+                const timeSinceLastAction = now - lastActionTime.teamMember;
+                
+                // Si pasó menos de 2 segundos desde la última acción local, podría ser duplicado
+                if (timeSinceLastAction < 2000) {
+                    // Verificamos si ya existe en el estado
+                    setTeamMembers(prev => {
+                        const exists = prev.some(member => member.id === data.teamMember.id);
+                        if (exists) {
+                            console.log('Team member creation ignored (already exists):', data.teamMember.id);
+                            return prev;
+                        }
+                        return [...prev, data.teamMember];
+                    });
+                } else {
+                    // Si pasó tiempo suficiente, es seguro añadir
+                    setTeamMembers(prev => {
+                        const exists = prev.some(member => member.id === data.teamMember.id);
+                        return exists ? prev : [...prev, data.teamMember];
+                    });
+                }
             });
 
             // Listener para miembro actualizado
             teamMemberChannel.listen('TeamMemberUpdated', (data) => {
-                console.log('Team member updated:', data);
-                setTeamMembers(prev => prev.map(member => 
-                    member.id === data.teamMember.id ? data.teamMember : member
-                ));
+                console.log('Team member updated via WebSocket:', data);
+                
+                setTeamMembers(prev => {
+                    const exists = prev.some(member => member.id === data.teamMember.id);
+                    if (!exists) {
+                        console.log('Team member to update not found:', data.teamMember.id);
+                        return prev;
+                    }
+                    return prev.map(member => 
+                        member.id === data.teamMember.id ? data.teamMember : member
+                    );
+                });
             });
 
             // Listener para miembro eliminado
             teamMemberChannel.listen('TeamMemberDeleted', (data) => {
-                console.log('Team member deleted:', data);
+                console.log('Team member deleted via WebSocket:', data);
+                
                 setTeamMembers(prev => prev.filter(member => member.id !== data.teamMemberId));
                 // También eliminar feedbacks relacionados
                 setFeedbackData(prev => prev.filter(feedback => feedback.target_id !== data.teamMemberId));
@@ -188,7 +256,18 @@ export const useAPI = () => {
     // Funciones de Team Members
     const addMember = useCallback(async (name, role) => {
         try {
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, teamMember: Date.now() }));
+            
             const newMember = await apiService.createTeamMember(name, role);
+            
+            // Actualización inmediata del estado
+            setTeamMembers(prev => {
+                // Verificamos que no exista ya
+                const exists = prev.some(member => member.id === newMember.id);
+                return exists ? prev : [...prev, newMember];
+            });
+            
             return newMember;
         } catch (error) {
             handleError(error);
@@ -198,7 +277,16 @@ export const useAPI = () => {
 
     const updateMember = useCallback(async (memberId, { name, role }) => {
         try {
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, teamMember: Date.now() }));
+            
             const updatedMember = await apiService.updateTeamMember(memberId, name, role);
+            
+            // Actualización inmediata del estado
+            setTeamMembers(prev => prev.map(member => 
+                member.id === memberId ? updatedMember : member
+            ));
+            
             return updatedMember;
         } catch (error) {
             handleError(error);
@@ -208,7 +296,14 @@ export const useAPI = () => {
 
     const deleteMember = useCallback(async (memberId) => {
         try {
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, teamMember: Date.now() }));
+            
             await apiService.deleteTeamMember(memberId);
+            
+            // Eliminación inmediata del estado
+            setTeamMembers(prev => prev.filter(member => member.id !== memberId));
+            
         } catch (error) {
             handleError(error);
             throw error;
@@ -219,7 +314,19 @@ export const useAPI = () => {
     const addFeedback = useCallback(async (feedbackData) => {
         try {
             const { targetId, category, title, text } = feedbackData;
+            
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, feedback: Date.now() }));
+            
             const newFeedback = await apiService.createFeedback(targetId, category, title, text);
+            
+            // Actualización inmediata del estado
+            setFeedbackData(prev => {
+                // Verificamos que no exista ya
+                const exists = prev.some(feedback => feedback.id === newFeedback.id);
+                return exists ? prev : [...prev, newFeedback];
+            });
+            
             return newFeedback;
         } catch (error) {
             handleError(error);
@@ -230,7 +337,17 @@ export const useAPI = () => {
     const updateFeedback = useCallback(async (feedbackId, feedbackData) => {
         try {
             const { targetId, category, title, text } = feedbackData;
+            
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, feedback: Date.now() }));
+            
             const updatedFeedback = await apiService.updateFeedback(feedbackId, targetId, category, title, text);
+            
+            // Actualización inmediata del estado
+            setFeedbackData(prev => prev.map(feedback => 
+                feedback.id === feedbackId ? updatedFeedback : feedback
+            ));
+            
             return updatedFeedback;
         } catch (error) {
             handleError(error);
@@ -240,9 +357,14 @@ export const useAPI = () => {
 
     const deleteFeedback = useCallback(async (feedbackId) => {
         try {
+            // Registramos el tiempo de la acción
+            setLastActionTime(prev => ({ ...prev, feedback: Date.now() }));
+            
             await apiService.deleteFeedback(feedbackId);
-            // NO eliminamos del estado aquí - esperamos el evento WebSocket
-            // para mantener consistencia entre todos los clientes
+            
+            // Eliminación inmediata del estado
+            setFeedbackData(prev => prev.filter(feedback => feedback.id !== feedbackId));
+            
         } catch (error) {
             handleError(error);
             throw error;
