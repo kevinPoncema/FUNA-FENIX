@@ -37,6 +37,11 @@ class APIService {
             const data = await response.json();
 
             if (!response.ok) {
+                // Si el token expiró, limpiar sesión
+                if (response.status === 401 && this.token) {
+                    this.clearAuth();
+                    throw new Error('Session expired. Please login again.');
+                }
                 throw new Error(data.message || data.error || 'API Error');
             }
 
@@ -45,6 +50,14 @@ class APIService {
             console.error('API Request failed:', error);
             throw error;
         }
+    }
+
+    // Limpiar datos de autenticación
+    clearAuth() {
+        this.token = null;
+        this.user = null;
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
     }
 
     // Métodos de autenticación
@@ -85,16 +98,17 @@ class APIService {
                 method: 'POST',
             });
         } finally {
-            this.token = null;
-            this.user = null;
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
+            this.clearAuth();
         }
     }
 
     // Métodos para Team Members
     async getTeamMembers() {
         return await this.request('/team-members');
+    }
+
+    async getTeamMembersWithFeedbacks() {
+        return await this.request('/team-members-with-feedbacks');
     }
 
     async createTeamMember(name, role) {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useAPI } from './api/useAPI.js';
 import Loading from './components/Loading.jsx';
 import ErrorDisplay from './components/ErrorDisplay.jsx';
@@ -10,6 +10,7 @@ import FeedbackFormModal from './components/FeedbackFormModal.jsx';
 import MemberManagementModal from './components/MemberManagementModal.jsx';
 import PostItDetailModal from './components/PostItDetailModal.jsx';
 import LoginModal from './components/LoginModal.jsx';
+import AuthenticationModal from './components/AuthenticationModal.jsx';
 
 /**
  * Componente Principal de la Aplicación
@@ -23,12 +24,14 @@ const App = () => {
         userId, 
         teamMembers, 
         isAdmin,
+        isAuthenticated,
         addFeedback, 
         deleteFeedback, 
         addMember, 
         deleteMember,
         updateMember,
         loginAsAdmin,
+        loginAsGuest,
         logout,
         clearError
     } = useAPI();
@@ -36,12 +39,20 @@ const App = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isManagementModalOpen, setIsManagementOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [authMode, setAuthMode] = useState(null); // 'admin' | 'guest' | null
     
     // Estado para el modal de detalle del post-it
     const [detailModalState, setDetailModalState] = useState({ 
         isVisible: false, 
         feedback: null 
     });
+
+    // Efecto para mostrar el modal de login si no está autenticado
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            setIsLoginModalOpen(true);
+        }
+    }, [isLoading, isAuthenticated]);
 
     const handleSaveFeedback = (formData) => {
         addFeedback(formData);
@@ -50,14 +61,23 @@ const App = () => {
     const handleToggleModal = () => setIsModalOpen(prev => !prev);
     const handleToggleManagementModal = () => {
         if (!isAdmin) {
+            setAuthMode('admin');
             setIsLoginModalOpen(true);
             return;
         }
         setIsManagementOpen(prev => !prev);
     };
     
-    const handleLogin = async (email, password) => {
+    const handleLoginAsAdmin = async (email, password) => {
         await loginAsAdmin(email, password);
+        setIsLoginModalOpen(false);
+        setAuthMode(null);
+    };
+
+    const handleLoginAsGuest = async (name = null) => {
+        await loginAsGuest(name);
+        setIsLoginModalOpen(false);
+        setAuthMode(null);
     };
     
     const handleLogout = () => {
@@ -87,6 +107,26 @@ const App = () => {
                     backgroundColor: '#2f5b40' 
                 }}>
                 <ErrorDisplay error={error} onRetry={clearError} />
+            </div>
+        );
+    }
+
+    // Si no está autenticado, mostrar solo el modal de login
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-cover bg-fixed"
+                style={{ 
+                    backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
+                    backgroundBlendMode: 'multiply', 
+                    backgroundColor: '#2f5b40' 
+                }}>
+                <AuthenticationModal
+                    isVisible={isLoginModalOpen}
+                    onClose={() => setIsLoginModalOpen(false)}
+                    onLoginAsAdmin={handleLoginAsAdmin}
+                    onLoginAsGuest={handleLoginAsGuest}
+                    authMode={authMode}
+                />
             </div>
         );
     }
@@ -163,11 +203,16 @@ const App = () => {
             )}
             
             {/* Modal de Login para Admin */}
-            <LoginModal
-                isVisible={isLoginModalOpen}
-                onClose={() => setIsLoginModalOpen(false)}
-                onLogin={handleLogin}
-            />
+            {authMode === 'admin' && (
+                <LoginModal
+                    isVisible={isLoginModalOpen}
+                    onClose={() => {
+                        setIsLoginModalOpen(false);
+                        setAuthMode(null);
+                    }}
+                    onLogin={handleLoginAsAdmin}
+                />
+            )}
             
             {/* Modal de Detalle de Post-it */}
             <PostItDetailModal

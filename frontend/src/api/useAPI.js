@@ -24,20 +24,20 @@ export const useAPI = () => {
             setIsLoading(true);
             setError(null);
 
-            // Cargar feedback siempre (usuarios autenticados)
-            const feedbacks = await apiService.getFeedbacks();
-            setFeedbackData(feedbacks);
-
-            // Cargar team members solo si es admin
-            if (apiService.isAdmin()) {
-                try {
-                    const members = await apiService.getTeamMembers();
-                    setTeamMembers(members);
-                } catch (adminError) {
-                    console.log('User is not admin, cannot load team members');
-                    setTeamMembers([]);
-                }
-            }
+            // Usar el endpoint team-members-with-feedbacks como método principal
+            const data = await apiService.getTeamMembersWithFeedbacks();
+            
+            // Los datos vienen en el formato correcto del backend
+            setTeamMembers(data.map(member => ({
+                ...member,
+                feedbacks: member.feedbacks || []
+            })));
+            
+            // Extraer todos los feedbacks de todos los miembros
+            const allFeedbacks = data.reduce((acc, member) => {
+                return acc.concat(member.feedbacks || []);
+            }, []);
+            setFeedbackData(allFeedbacks);
 
         } catch (error) {
             handleError(error);
@@ -57,14 +57,12 @@ export const useAPI = () => {
                 if (apiService.isAuthenticated()) {
                     setUser(apiService.getCurrentUser());
                     await loadData();
+                    setIsInitialized(true);
                 } else {
-                    // Auto-login como guest
-                    const authResult = await apiService.loginAsGuest();
-                    setUser(authResult.user);
-                    await loadData();
+                    // No auto-login, esperar que el usuario se autentique
+                    setIsInitialized(false);
                 }
 
-                setIsInitialized(true);
             } catch (error) {
                 handleError(error);
             } finally {
@@ -82,6 +80,23 @@ export const useAPI = () => {
             const result = await apiService.loginAsAdmin(email, password);
             setUser(result.user);
             await loadData();
+            setIsInitialized(true);
+            return result;
+        } catch (error) {
+            handleError(error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const loginAsGuest = useCallback(async (name = null) => {
+        try {
+            setIsLoading(true);
+            const result = await apiService.loginAsGuest(name);
+            setUser(result.user);
+            await loadData();
+            setIsInitialized(true);
             return result;
         } catch (error) {
             handleError(error);
@@ -98,12 +113,6 @@ export const useAPI = () => {
             setTeamMembers([]);
             setFeedbackData([]);
             setIsInitialized(false);
-            
-            // Auto re-login como guest
-            const authResult = await apiService.loginAsGuest();
-            setUser(authResult.user);
-            await loadData();
-            setIsInitialized(true);
         } catch (error) {
             handleError(error);
         }
@@ -198,9 +207,11 @@ export const useAPI = () => {
         teamMembers,
         feedbackData,
         isInitialized,
+        isAuthenticated: apiService.isAuthenticated(),
         
         // Funciones de autenticación
         loginAsAdmin,
+        loginAsGuest,
         logout,
         isAdmin: apiService.isAdmin(),
         
