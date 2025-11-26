@@ -122,7 +122,7 @@ class IsAdminMiddlewareTest extends TestCase
         // Act & Assert - Sin autenticación
         $this->getJson('/api/team-members')
              ->assertStatus(401)
-             ->assertJson(['error' => 'Usuario no autenticado']);
+             ->assertJson(['message' => 'Unauthenticated.']);
 
         $this->postJson('/api/team-members', [
             'name' => 'Test Member',

@@ -23,9 +23,9 @@ class StoreFeedbackRequest extends FormRequest
     {
         return [
             'target_id' => 'required|exists:team_members,id',
-            'category' => 'required|string|max:100',
-            'title' => 'required|string|max:255',
-            'text' => 'required|string|max:1000',
+            'category' => 'required|string|in:positivo,negativo,sugerencia,mejora',
+            'title' => 'required|string|max:50',
+            'text' => 'required|string|max:300',
         ];
     }
 
@@ -39,13 +39,13 @@ class StoreFeedbackRequest extends FormRequest
             'target_id.exists' => 'El destinatario seleccionado no existe.',
             'category.required' => 'La categoría es obligatoria.',
             'category.string' => 'La categoría debe ser texto.',
-            'category.max' => 'La categoría no puede exceder 100 caracteres.',
+            'category.in' => 'La categoría debe ser: positivo, negativo, sugerencia o mejora.',
             'title.required' => 'El título es obligatorio.',
             'title.string' => 'El título debe ser texto.',
-            'title.max' => 'El título no puede exceder 255 caracteres.',
+            'title.max' => 'El título no puede exceder 50 caracteres.',
             'text.required' => 'El contenido del feedback es obligatorio.',
             'text.string' => 'El contenido debe ser texto.',
-            'text.max' => 'El contenido no puede exceder 1000 caracteres.',
+            'text.max' => 'El contenido no puede exceder 300 caracteres.',
         ];
     }
 

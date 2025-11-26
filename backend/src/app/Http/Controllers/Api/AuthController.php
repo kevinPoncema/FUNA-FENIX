@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthController extends Controller
 {
@@ -41,8 +42,12 @@ class AuthController extends Controller
 
         } catch (AuthenticationException $e) {
             return response()->json([
-                'message' => 'Invalid credentials'
+                'error' => 'Credenciales inválidas'
             ], 401);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'Acceso denegado. Solo administradores pueden acceder.'
+            ], 403);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
@@ -62,22 +67,15 @@ class AuthController extends Controller
     public function loginGuest(Request $request): JsonResponse
     {
         try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'hash' => 'nullable|string|size:36', // UUID tiene 36 caracteres
-            ]);
-
-            $name = $request->input('name');
+            // Si no se proporciona name, generar uno automático
+            $name = $request->input('name', 'Invitado-' . uniqid());
             $hash = $request->input('hash');
 
             $result = $this->authService->loginGuest($name, $hash);
 
             return response()->json([
-                'message' => 'Guest login successful',
                 'user' => $result['user'],
-                'token' => $result['token'],
-                'hash' => $result['hash'],
-                'role' => 'guest'
+                'token' => $result['token']
             ], 200);
 
         } catch (ValidationException $e) {
@@ -102,7 +100,7 @@ class AuthController extends Controller
             $request->user()->currentAccessToken()->delete();
 
             return response()->json([
-                'message' => 'Logout successful'
+                'message' => 'Sesión cerrada correctamente'
             ], 200);
 
         } catch (\Exception $e) {
@@ -118,8 +116,6 @@ class AuthController extends Controller
      */
     public function user(Request $request): JsonResponse
     {
-        return response()->json([
-            'user' => $request->user()
-        ], 200);
+        return response()->json($request->user(), 200);
     }
 }

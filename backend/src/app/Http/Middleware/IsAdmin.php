@@ -15,15 +15,10 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Verificar si el usuario está autenticado
-        if (!auth()->check()) {
-            return response()->json([
-                'error' => 'Usuario no autenticado'
-            ], 401);
-        }
-
-        // Verificar si el usuario tiene role de administrador
+        // El middleware auth:sanctum ya maneja la autenticación
+        // Solo verificamos el role del usuario autenticado
         $user = auth()->user();
+        
         if (!$user || !in_array($user->role, ['admin', 'administrator'])) {
             return response()->json([
                 'error' => 'Acceso denegado. Se requieren privilegios de administrador.'

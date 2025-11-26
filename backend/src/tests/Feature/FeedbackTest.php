@@ -83,7 +83,7 @@ class FeedbackTest extends TestCase
         Sanctum::actingAs($this->user1);
         $data = [
             'target_id' => $this->targetMember->id,
-            'category' => 'achievements',
+            'category' => 'positivo',
             'title' => 'Great work on the project',
             'text' => 'You did an excellent job on the recent project delivery.'
         ];
@@ -138,7 +138,7 @@ class FeedbackTest extends TestCase
         ]);
 
         $updateData = [
-            'category' => 'qualities',
+            'category' => 'mejora',
             'title' => 'Updated title',
             'text' => 'Updated feedback text'
         ];

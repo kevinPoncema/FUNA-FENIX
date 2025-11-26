@@ -6,6 +6,7 @@ use App\Repositories\AuthRepo;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class AuthService
 {
@@ -56,7 +57,11 @@ class AuthService
         $user = $this->authRepo->findUserByCredentials($credentials);
 
         if (!$user) {
-            throw new AuthenticationException('Invalid credentials or insufficient permissions');
+            throw new AuthenticationException('Invalid credentials');
+        }
+
+        if (!$this->authRepo->isAdmin($user)) {
+            throw new AuthorizationException('Access denied. Only administrators can access.');
         }
 
         $token = $this->authRepo->issueToken($user, 'admin-token', ['admin']);

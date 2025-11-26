@@ -23,9 +23,9 @@ class UpdateFeedbackRequest extends FormRequest
     {
         return [
             'target_id' => 'sometimes|exists:team_members,id',
-            'category' => 'sometimes|string|max:100',
-            'title' => 'sometimes|string|max:255',
-            'text' => 'sometimes|string|max:1000',
+            'category' => 'sometimes|string|in:positivo,negativo,sugerencia,mejora',
+            'title' => 'sometimes|string|max:50',
+            'text' => 'sometimes|string|max:300',
         ];
     }
 
@@ -37,11 +37,11 @@ class UpdateFeedbackRequest extends FormRequest
         return [
             'target_id.exists' => 'El destinatario seleccionado no existe.',
             'category.string' => 'La categoría debe ser texto.',
-            'category.max' => 'La categoría no puede exceder 100 caracteres.',
+            'category.in' => 'La categoría debe ser: positivo, negativo, sugerencia o mejora.',
             'title.string' => 'El título debe ser texto.',
-            'title.max' => 'El título no puede exceder 255 caracteres.',
+            'title.max' => 'El título no puede exceder 50 caracteres.',
             'text.string' => 'El contenido debe ser texto.',
-            'text.max' => 'El contenido no puede exceder 1000 caracteres.',
+            'text.max' => 'El contenido no puede exceder 300 caracteres.',
         ];
     }
 

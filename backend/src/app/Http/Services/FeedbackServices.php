@@ -4,7 +4,8 @@ use App\Repositories\FeedbackRepo;
 use App\Events\FeedbackCreated;
 use App\Events\FeedbackUpdated;
 use App\Events\FeedbackDeleted;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 
 class FeedbackServices
 {
@@ -32,8 +33,8 @@ class FeedbackServices
 
     public function updateFeedback(string $id, array $data)
     {
-        $this->validateOwnership($feedback);
         $feedback = $this->feedbackRepo->getFeedbackById($id);
+        $this->validateOwnership($feedback);
         $fd = $this->feedbackRepo->updateFeedback($id, $data);
         event(new FeedbackUpdated($fd));
         return $fd;
@@ -41,8 +42,8 @@ class FeedbackServices
 
     public function deleteFeedback(string $id)
     {
-        $this->validateOwnership($feedback);
         $feedback = $this->feedbackRepo->getFeedbackById($id);
+        $this->validateOwnership($feedback);
         
         $this->feedbackRepo->deleteFeedback($id);
         event(new FeedbackDeleted($id));
@@ -61,15 +62,11 @@ class FeedbackServices
         $currentUserId = auth()->id();
         
         if (!$currentUserId) {
-            throw new HttpResponseException(response()->json([
-                'error' => 'Usuario no autenticado'
-            ], 401));
+            throw new AuthenticationException('Usuario no autenticado');
         }
 
         if ($feedback->owner_id !== $currentUserId) {
-            throw new HttpResponseException(response()->json([
-                'error' => 'No autorizado. Solo el propietario puede modificar este feedback.'
-            ], 403));
+            throw new AuthorizationException('No autorizado. Solo el propietario puede modificar este feedback.');
         }
     }
 }

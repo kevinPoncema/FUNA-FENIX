@@ -14,12 +14,17 @@ class AuthRepo
     public function findUserByCredentials(array $credentials): ?User
     {
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            if ($user && $user->role === 'admin') {
-                return $user;
-            }
+            return Auth::user();
         }
         return null;
+    }
+
+    /**
+     * Verifica que el usuario tiene permisos de administrador
+     */
+    public function isAdmin(User $user): bool
+    {
+        return in_array($user->role, ['admin', 'administrator']);
     }
 
     /**

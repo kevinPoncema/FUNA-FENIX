@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateFeedbackRequest;
 use App\Http\Services\FeedbackServices;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 
 class FeedbackController extends Controller
 {
@@ -82,6 +84,14 @@ class FeedbackController extends Controller
             return response()->json([
                 'message' => 'Feedback not found'
             ], 404);
+        } catch (AuthenticationException $e) {
+            return response()->json([
+                'error' => 'Usuario no autenticado'
+            ], 401);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'No autorizado. Solo el propietario puede modificar este feedback.'
+            ], 403);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error updating feedback',
@@ -102,6 +112,14 @@ class FeedbackController extends Controller
             return response()->json([
                 'message' => 'Feedback not found'
             ], 404);
+        } catch (AuthenticationException $e) {
+            return response()->json([
+                'error' => 'Usuario no autenticado'
+            ], 401);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'No autorizado. Solo el propietario puede modificar este feedback.'
+            ], 403);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error deleting feedback',
