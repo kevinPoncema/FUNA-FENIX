@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp } from 'lucide-react';
+import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp, Trash2 } from 'lucide-react';
 
 /**
  * Componente para una única nota Post-it
@@ -68,25 +68,25 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
 
     return (
         <div 
-            className={`relative p-2 md:p-3 shadow-lg rounded-sm transform cursor-pointer ${colorClass} w-32 h-36 md:w-40 md:h-44 flex flex-col justify-between ${animationClasses}`} 
+            className={`relative p-3 md:p-4 shadow-lg rounded-sm transform cursor-pointer ${colorClass} w-40 h-44 md:w-48 md:h-52 lg:w-52 lg:h-56 flex flex-col justify-between ${animationClasses}`} 
             style={{ transform: `rotate(${rotation}deg)` }}
         >
             <div 
-                className="absolute inset-0 z-10 p-2 md:p-3 flex flex-col justify-between"
+                className="absolute inset-0 z-10 p-3 md:p-4 flex flex-col justify-between"
                 onClick={() => onOpenDetail(feedback)}
             >
-                <p className="text-xs md:text-sm font-bold mb-1 italic opacity-90 flex items-center gap-1 text-gray-800 border-b border-gray-400/50 pb-0.5">
-                    <Icon size={12} md:size={14} className="text-gray-800" />
+                <p className="text-sm md:text-base font-bold mb-2 italic opacity-90 flex items-center gap-1 text-gray-800 border-b border-gray-400/50 pb-1">
+                    <Icon size={14} md:size={16} className="text-gray-800" />
                     <span className="hidden sm:inline">{categoryInfo.label}</span>
                 </p>
                 
                 {/* Título del Post-it */}
-                <h5 className="text-sm md:text-lg font-extrabold text-gray-900 mb-1 leading-tight overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <h5 className="text-base md:text-xl font-extrabold text-gray-900 mb-2 leading-tight overflow-hidden whitespace-nowrap overflow-ellipsis">
                     {feedback.title}
                 </h5>
 
                 {/* Contenido con scroll */}
-                <p className="text-xs md:text-sm text-gray-800 whitespace-pre-wrap overflow-y-auto custom-scrollbar h-full pr-1"> 
+                <p className="text-sm md:text-base text-gray-800 whitespace-pre-wrap overflow-y-auto custom-scrollbar h-full pr-1"> 
                     {feedback.text}
                 </p> 
             </div>
@@ -95,19 +95,19 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
                 <button
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className={`absolute -top-2 -right-2 w-6 h-6 rounded-sm text-black transition shadow-lg z-20 border border-gray-300 flex items-center justify-center ${
+                    className={`absolute -top-3 -right-3 w-8 h-8 text-white transition-all duration-200 shadow-lg z-20 border-2 border-white flex items-center justify-center ${
                         isDeleting 
-                            ? 'bg-red-300 cursor-not-allowed' 
-                            : 'bg-red-500 hover:bg-red-600 hover:scale-110'
+                            ? 'bg-red-300 cursor-not-allowed scale-90' 
+                            : 'bg-red-500 hover:bg-red-600 hover:scale-110 active:scale-95'
                     }`}
                     title="Eliminar mi post-it"
                 >
-                    <X size={12} className="text-black font-bold" />
+                    <Trash2 size={16} className="text-white" />
                 </button>
             )}
 
             {/* Ícono de Zoom */}
-            <ZoomIn size={14} className="absolute bottom-1 right-1 text-gray-500 opacity-60 z-0"/>
+            <ZoomIn size={16} className="absolute bottom-2 right-2 text-gray-500 opacity-60 z-0"/>
         </div>
     );
 };
