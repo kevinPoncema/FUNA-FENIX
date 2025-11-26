@@ -14,13 +14,40 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'guest_hash' => null,
-            'email_verified_at' => now(),
-        ]);
+        // Crear usuario Kevin si no existe
+        if (!User::where('email', 'kevin.ponce@fenix.com')->exists()) {
+            User::create([
+                'name' => 'Kevin Ponce',
+                'email' => 'kevin.ponce@fenix.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'guest_hash' => null,
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        // Crear usuario Moys si no existe
+        if (!User::where('email', 'diego.moys@fenix.com')->exists()) {
+            User::create([
+                'name' => 'Diego Moys',
+                'email' => 'diego.moys@fenix.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'guest_hash' => null,
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        // Crear usuario administrador por defecto si no existe
+        if (!User::where('email', 'admin@example.com')->exists()) {
+            User::create([
+                'name' => 'Administrator',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'guest_hash' => null,
+                'email_verified_at' => now(),
+            ]);
+        }
     }
 }
