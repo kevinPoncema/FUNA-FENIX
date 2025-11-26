@@ -189,7 +189,6 @@ export const useAPI = () => {
     const addMember = useCallback(async (name, role) => {
         try {
             const newMember = await apiService.createTeamMember(name, role);
-            setTeamMembers(prev => [...prev, newMember]);
             return newMember;
         } catch (error) {
             handleError(error);
@@ -200,9 +199,6 @@ export const useAPI = () => {
     const updateMember = useCallback(async (memberId, { name, role }) => {
         try {
             const updatedMember = await apiService.updateTeamMember(memberId, name, role);
-            setTeamMembers(prev => prev.map(member => 
-                member.id === memberId ? updatedMember : member
-            ));
             return updatedMember;
         } catch (error) {
             handleError(error);
@@ -213,10 +209,6 @@ export const useAPI = () => {
     const deleteMember = useCallback(async (memberId) => {
         try {
             await apiService.deleteTeamMember(memberId);
-            setTeamMembers(prev => prev.filter(member => member.id !== memberId));
-            
-            // También eliminar feedbacks relacionados
-            setFeedbackData(prev => prev.filter(feedback => feedback.target_id !== memberId));
         } catch (error) {
             handleError(error);
             throw error;
@@ -228,7 +220,6 @@ export const useAPI = () => {
         try {
             const { targetId, category, title, text } = feedbackData;
             const newFeedback = await apiService.createFeedback(targetId, category, title, text);
-            setFeedbackData(prev => [...prev, newFeedback]);
             return newFeedback;
         } catch (error) {
             handleError(error);
@@ -240,9 +231,6 @@ export const useAPI = () => {
         try {
             const { targetId, category, title, text } = feedbackData;
             const updatedFeedback = await apiService.updateFeedback(feedbackId, targetId, category, title, text);
-            setFeedbackData(prev => prev.map(feedback => 
-                feedback.id === feedbackId ? updatedFeedback : feedback
-            ));
             return updatedFeedback;
         } catch (error) {
             handleError(error);
@@ -253,7 +241,8 @@ export const useAPI = () => {
     const deleteFeedback = useCallback(async (feedbackId) => {
         try {
             await apiService.deleteFeedback(feedbackId);
-            setFeedbackData(prev => prev.filter(feedback => feedback.id !== feedbackId));
+            // NO eliminamos del estado aquí - esperamos el evento WebSocket
+            // para mantener consistencia entre todos los clientes
         } catch (error) {
             handleError(error);
             throw error;
