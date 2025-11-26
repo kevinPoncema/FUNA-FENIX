@@ -1,6 +1,10 @@
 <?php
 namespace App\Http\Services;
 use App\Repositories\TeamMemberRepo;
+use App\Events\TeamMemberCreated;
+use App\Events\TeamMemberUpdated;
+use App\Events\TeamMemberDeleted;
+use App\Models\TeamMember;
 
 class TeamMemberServices
 {
@@ -23,17 +27,22 @@ class TeamMemberServices
 
     public function createTeamMember(array $data)
     {
-        return $this->teamMemberRepo->createTeamMember($data);
+        $tm = $this->teamMemberRepo->createTeamMember($data);
+        event(new TeamMemberCreated($tm));
+        return $tm;
     }
 
     public function updateTeamMember(int $id, array $data)
     {
-        return $this->teamMemberRepo->updateTeamMember($id, $data);
+        $tm = $this->teamMemberRepo->updateTeamMember($id, $data);
+        event(new TeamMemberUpdated($tm));
+        return $tm;
     }
 
     public function deleteTeamMember(int $id)
     {
-        return $this->teamMemberRepo->deleteTeamMember($id);
+        $this->teamMemberRepo->deleteTeamMember($id);
+        event(new TeamMemberDeleted($id));
     }
 
     public function getAllTeamMembersWithFeedbacks()
