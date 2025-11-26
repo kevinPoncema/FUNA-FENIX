@@ -33,10 +33,17 @@ services:
     ports:
       - "8000:8000"
       - "6001:6001"
+      - "9601:9601"  # Puerto para métricas de Soketi
     depends_on:
       mysql:
         condition: service_healthy
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    #command: php artisan serve --host=0.0.0.0 --port=8000
+    command: /usr/local/bin/start.sh --- IGNORE ---
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=secret
     networks:
       - app-network
 

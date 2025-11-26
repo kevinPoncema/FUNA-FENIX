@@ -1,0 +1,27 @@
+{
+  "debug": true,
+  "port": 6001,
+  "host": "0.0.0.0",
+  "metrics": {
+    "enabled": true,
+    "port": 9601
+  },
+  "app_manager": {
+    "driver": "array",
+    "array": {
+      "apps": [
+        {
+          "id": "local-app",
+          "key": "local-key",
+          "secret": "local-secret",
+          "max_connections": 100,
+          "enable_client_messages": false,
+          "enabled": true,
+          "max_backend_events_per_minute": 1000,
+          "max_client_events_per_minute": 1000,
+          "max_read_requests_per_minute": 1000
+        }
+      ]
+    }
+  }
+}

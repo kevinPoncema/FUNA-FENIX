@@ -14,3 +14,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Carpeta de trabajo
 WORKDIR /var/www/html/src
+
+# Copiar script de inicio
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
