@@ -32,6 +32,7 @@ services:
     working_dir: /var/www/html/src
     ports:
       - "8000:8000"
+      - "6001:6001"
     depends_on:
       mysql:
         condition: service_healthy
