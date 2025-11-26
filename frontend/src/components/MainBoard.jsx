@@ -7,19 +7,21 @@ import MemberRow from './MemberRow.jsx';
  */
 const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDetail, webSocketFeedbackIds }) => {
     return (
-        <main className="bg-black/40 p-4 rounded-xl shadow-inner border border-white/20">
+        <main className="bg-black/40 p-2 md:p-4 rounded-xl shadow-inner border border-white/20 w-full overflow-x-auto">
             {teamMembers.length > 0 ? (
-                teamMembers.map((member) => (
-                    <MemberRow
-                        key={member.id}
-                        member={member}
-                        feedbackData={feedbackData}
-                        currentUserId={userId}
-                        deleteFeedback={deleteFeedback}
-                        onOpenDetail={onOpenDetail}
-                        webSocketFeedbackIds={webSocketFeedbackIds}
-                    />
-                ))
+                <div className="w-full">
+                    {teamMembers.map((member) => (
+                        <MemberRow
+                            key={member.id}
+                            member={member}
+                            feedbackData={feedbackData}
+                            currentUserId={userId}
+                            deleteFeedback={deleteFeedback}
+                            onOpenDetail={onOpenDetail}
+                            webSocketFeedbackIds={webSocketFeedbackIds}
+                        />
+                    ))}
+                </div>
             ) : (
                 <div className="text-center p-10 text-white/70">
                     <Users size={32} className="mx-auto mb-4"/>

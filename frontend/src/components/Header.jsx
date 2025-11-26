@@ -6,23 +6,23 @@ import { Zap, User, ChevronsUp } from 'lucide-react';
  */
 const Header = () => {
     return (
-        <header className="text-center mb-8 bg-black/40 p-4 rounded-xl shadow-2xl">
-            <h1 className="text-5xl font-extrabold text-green-300 tracking-wider font-serif">
+        <header className="text-center mb-4 md:mb-8 bg-black/40 p-3 md:p-4 rounded-xl shadow-2xl">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-green-300 tracking-wider font-serif">
                 Retrospectiva de Equipo
             </h1>
-            <p className="text-xl text-white/90 mt-2">
+            <p className="text-sm md:text-lg lg:text-xl text-white/90 mt-2">
                 La Pizarra del Crecimiento (Acciones, Esenciales, Potencial)
             </p>
             {/* Títulos de Categoría en la cabecera (para guía visual) */}
-            <div className="mt-4 flex justify-center gap-10 text-lg font-bold text-white/90">
-                <span className="text-green-300 flex items-center gap-1">
-                    <Zap size={16} className="text-green-300" /> Logros
+            <div className="mt-4 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 md:gap-10 text-sm md:text-lg font-bold text-white/90">
+                <span className="text-green-300 flex items-center justify-center gap-1">
+                    <Zap size={14} md:size={16} className="text-green-300" /> Logros
                 </span>
-                <span className="text-yellow-200 flex items-center gap-1">
-                    <User size={16} className="text-yellow-200" /> Cualidades
+                <span className="text-yellow-200 flex items-center justify-center gap-1">
+                    <User size={14} md:size={16} className="text-yellow-200" /> Cualidades
                 </span>
-                <span className="text-cyan-300 flex items-center gap-1">
-                    <ChevronsUp size={16} className="text-cyan-300" /> Potencial
+                <span className="text-cyan-300 flex items-center justify-center gap-1">
+                    <ChevronsUp size={14} md:size={16} className="text-cyan-300" /> Potencial
                 </span>
             </div>
         </header>

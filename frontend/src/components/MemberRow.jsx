@@ -65,34 +65,37 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
         : '';
 
     return (
-        <div className={`flex border-b border-white/10 py-4 items-start gap-4 hover:bg-black/20 transition-all duration-300 ${memberAnimationClasses}`}>
+        <div className={`flex flex-col lg:flex-row border-b border-white/10 py-4 items-start gap-4 hover:bg-black/20 transition-all duration-300 w-full ${memberAnimationClasses}`}>
             
             {/* Columna de Miembro (Izquierda) */}
-            <div className="w-40 flex flex-col items-center justify-center p-2 pt-4 flex-shrink-0">
-                <div className={`w-16 h-16 rounded-full bg-indigo-500/80 text-white flex items-center justify-center text-2xl font-extrabold border-2 border-white shadow-xl transition-all duration-300 ${
+            <div className="w-full lg:w-48 flex flex-row lg:flex-col items-center justify-start lg:justify-center p-2 pt-4 flex-shrink-0 gap-4 lg:gap-0">
+                <div className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-indigo-500/80 text-white flex items-center justify-center text-xl lg:text-2xl font-extrabold border-2 border-white shadow-xl transition-all duration-300 ${
                     justCreated ? 'ring-4 ring-purple-400 ring-opacity-75' : ''
                 }`}>
                     {member.name.charAt(0)}
                 </div>
-                <h3 className="text-base font-bold text-white mt-2 text-center">{member.name}</h3>
-                <p className="text-xs text-indigo-300 text-center">({member.role})</p>
-                {justCreated && (
-                    <p className="text-xs text-purple-300 text-center mt-1 animate-bounce">¡Nuevo!</p>
-                )}
+                <div className="text-left lg:text-center">
+                    <h3 className="text-sm lg:text-base font-bold text-white mt-0 lg:mt-2">{member.name}</h3>
+                    <p className="text-xs text-indigo-300">({member.role})</p>
+                    {justCreated && (
+                        <p className="text-xs text-purple-300 mt-1 animate-bounce">¡Nuevo!</p>
+                    )}
+                </div>
             </div>
 
             {/* Columnas de Feedback (Derecha) */}
-            <div className="flex flex-grow gap-4 pt-4 min-h-[100px] overflow-x-auto pb-2">
+            <div className="flex flex-1 gap-2 lg:gap-4 pt-4 min-h-[100px] overflow-x-auto pb-2 w-full">
                 {categories.map((cat) => (
-                    <div key={cat.id} className="flex flex-col gap-3 min-w-[150px] border-l border-white/10 pl-4">
+                    <div key={cat.id} className="flex flex-col gap-3 min-w-[140px] lg:min-w-[200px] flex-1 border-l border-white/10 pl-2 lg:pl-4">
                         {/* Título de la Categoría */}
-                        <h4 className="text-sm font-semibold text-white/80 uppercase tracking-widest flex items-center gap-1">
-                            <cat.icon size={14} className="text-white" /> 
-                            {cat.title}
+                        <h4 className="text-xs lg:text-sm font-semibold text-white/80 uppercase tracking-widest flex items-center gap-1">
+                            <cat.icon size={12} lg:size={14} className="text-white" /> 
+                            <span className="hidden sm:inline">{cat.title}</span>
+                            <span className="sm:hidden">{cat.title.substring(0, 3)}</span>
                         </h4>
 
                         {/* Post-its de la Categoría */}
-                        <div className="flex gap-4">
+                        <div className="flex gap-2 lg:gap-4 flex-wrap">
                             {feedbackByCategory[cat.filter].length > 0 ? (
                                 feedbackByCategory[cat.filter].map((feedback) => (
                                     <PostItNote

@@ -134,11 +134,15 @@ const App = () => {
 
     return (
         <div 
-            className="min-h-screen p-6 font-sans bg-cover bg-fixed"
+            className="min-h-screen w-screen p-2 md:p-4 font-sans overflow-x-hidden"
             style={{ 
                 backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
                 backgroundBlendMode: 'multiply', 
-                backgroundColor: '#2f5b40' 
+                backgroundColor: '#2f5b40',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
             }}
         >
             {/* Estilo CSS para el scrollbar personalizado */}
