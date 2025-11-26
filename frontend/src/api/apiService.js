@@ -2,6 +2,8 @@
  * Servicio de API simplificado para comunicarse con el backend Laravel
  */
 
+import echo from './echo.js';
+
 const API_BASE_URL = 'http://localhost:8000/api';
 
 class APIService {
@@ -127,23 +129,36 @@ class APIService {
     }
 
     async createTeamMember(name, role) {
-        return await this.request('/team-members', {
+        const result = await this.request('/team-members', {
             method: 'POST',
             body: JSON.stringify({ name, role }),
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('team-members', 'TeamMemberCreated', { teamMember: result });
+        
+        return result;
     }
 
     async updateTeamMember(id, name, role) {
-        return await this.request(`/team-members/${id}`, {
+        const result = await this.request(`/team-members/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ name, role }),
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('team-members', 'TeamMemberUpdated', { teamMember: result });
+        
+        return result;
     }
 
     async deleteTeamMember(id) {
-        return await this.request(`/team-members/${id}`, {
+        await this.request(`/team-members/${id}`, {
             method: 'DELETE',
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('team-members', 'TeamMemberDeleted', { teamMemberId: parseInt(id) });
     }
 
     // Métodos para Feedback
@@ -152,7 +167,7 @@ class APIService {
     }
 
     async createFeedback(targetId, category, title, text) {
-        return await this.request('/feedbacks', {
+        const result = await this.request('/feedbacks', {
             method: 'POST',
             body: JSON.stringify({
                 target_id: targetId,
@@ -161,10 +176,15 @@ class APIService {
                 text,
             }),
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('feedbacks', 'FeedbackCreated', { feedback: result });
+        
+        return result;
     }
 
     async updateFeedback(id, targetId, category, title, text) {
-        return await this.request(`/feedbacks/${id}`, {
+        const result = await this.request(`/feedbacks/${id}`, {
             method: 'PUT',
             body: JSON.stringify({
                 target_id: targetId,
@@ -173,12 +193,20 @@ class APIService {
                 text,
             }),
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('feedbacks', 'FeedbackUpdated', { feedback: result });
+        
+        return result;
     }
 
     async deleteFeedback(id) {
-        return await this.request(`/feedbacks/${id}`, {
+        await this.request(`/feedbacks/${id}`, {
             method: 'DELETE',
         });
+        
+        // Disparar evento simulado
+        echo._simulateEventFromAPI('feedbacks', 'FeedbackDeleted', { feedbackId: parseInt(id) });
     }
 
     // Verificar si el usuario está autenticado

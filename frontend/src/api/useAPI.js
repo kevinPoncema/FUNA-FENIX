@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import apiService from './apiService.js';
+import echo from './echo.js';
 
 /**
  * Hook simplificado que maneja el estado de la aplicación usando llamadas a la API
@@ -72,6 +73,72 @@ export const useAPI = () => {
 
         initialize();
     }, []);
+
+    // Configurar listeners de Echo cuando el usuario esté autenticado
+    useEffect(() => {
+        if (!isInitialized || !apiService.isAuthenticated()) {
+            return;
+        }
+
+        console.log('Setting up Echo listeners...');
+
+        // Canal de feedback
+        const feedbackChannel = echo.channel('feedbacks');
+        
+        // Listener para feedback creado
+        feedbackChannel.listen('FeedbackCreated', (data) => {
+            console.log('Feedback created:', data);
+            setFeedbackData(prev => [...prev, data.feedback]);
+        });
+
+        // Listener para feedback actualizado
+        feedbackChannel.listen('FeedbackUpdated', (data) => {
+            console.log('Feedback updated:', data);
+            setFeedbackData(prev => prev.map(feedback => 
+                feedback.id === data.feedback.id ? data.feedback : feedback
+            ));
+        });
+
+        // Listener para feedback eliminado
+        feedbackChannel.listen('FeedbackDeleted', (data) => {
+            console.log('Feedback deleted:', data);
+            setFeedbackData(prev => prev.filter(feedback => feedback.id !== data.feedbackId));
+        });
+
+        // Canal de team members (solo para admins)
+        let teamMemberChannel = null;
+        if (apiService.isAdmin()) {
+            teamMemberChannel = echo.channel('team-members');
+            
+            // Listener para miembro creado
+            teamMemberChannel.listen('TeamMemberCreated', (data) => {
+                console.log('Team member created:', data);
+                setTeamMembers(prev => [...prev, data.teamMember]);
+            });
+
+            // Listener para miembro actualizado
+            teamMemberChannel.listen('TeamMemberUpdated', (data) => {
+                console.log('Team member updated:', data);
+                setTeamMembers(prev => prev.map(member => 
+                    member.id === data.teamMember.id ? data.teamMember : member
+                ));
+            });
+
+            // Listener para miembro eliminado
+            teamMemberChannel.listen('TeamMemberDeleted', (data) => {
+                console.log('Team member deleted:', data);
+                setTeamMembers(prev => prev.filter(member => member.id !== data.teamMemberId));
+                // También eliminar feedbacks relacionados
+                setFeedbackData(prev => prev.filter(feedback => feedback.target_id !== data.teamMemberId));
+            });
+        }
+
+        // Cleanup function
+        return () => {
+            console.log('Cleaning up Echo listeners...');
+            // En el MockEcho no necesitamos cleanup, pero en Echo real sí
+        };
+    }, [isInitialized, apiService.isAuthenticated(), apiService.isAdmin()]);
 
     // Funciones de autenticación
     const loginAsAdmin = useCallback(async (email, password) => {
