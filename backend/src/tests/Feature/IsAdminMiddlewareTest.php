@@ -94,8 +94,9 @@ class IsAdminMiddlewareTest extends TestCase
         ])->assertStatus(403)
           ->assertJson(['error' => 'Acceso denegado. Se requieren privilegios de administrador.']);
 
+        // team-members-with-feedbacks NO requiere ser admin, solo autenticado
         $this->getJson('/api/team-members-with-feedbacks')
-             ->assertStatus(403);
+             ->assertStatus(200);
     }
 
     public function test_user_with_other_role_cannot_access_protected_routes()
