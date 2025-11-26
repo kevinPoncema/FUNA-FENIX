@@ -15,8 +15,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('auth/logout', [AuthController::class, 'logout']);
     
-    // Recursos protegidos
-    Route::apiResource('team-members', TeamMemberController::class);
+    // Recursos protegidos - team-members requiere admin
+    Route::middleware('isAdmin')->group(function () {
+        Route::apiResource('team-members', TeamMemberController::class);
+    });
+    
+    // Feedback disponible para usuarios autenticados
     Route::apiResource('feedbacks', FeedbackController::class);
     Route::get('team-members-with-feedbacks', [TeamMemberController::class, 'indexWithFeedbacks']);
 });
