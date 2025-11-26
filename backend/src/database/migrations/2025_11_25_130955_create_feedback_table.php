@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
             $table->foreignId('target_id')->constrained('team_members')->cascadeOnDelete();
-            $table->foreignId('author_id')->constrained('users')->cascadeOnDelete();
             $table->enum('category', ['achievements', 'qualities', 'potential']);
             $table->string('title', 50);
             $table->string('text', 300);

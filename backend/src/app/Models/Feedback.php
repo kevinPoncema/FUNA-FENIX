@@ -12,7 +12,6 @@ class Feedback extends Model
     protected $table = 'feedback';
     protected $fillable = [
         'target_id',
-        'author_id',
         'category',
         'title',
         'text',
