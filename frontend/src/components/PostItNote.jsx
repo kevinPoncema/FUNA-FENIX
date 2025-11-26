@@ -95,14 +95,14 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
                 <button
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className={`absolute -top-1 -right-1 p-0.5 rounded-full text-white transition shadow-md z-20 ${
+                    className={`absolute -top-2 -right-2 w-6 h-6 rounded-full text-white transition shadow-lg z-20 border-2 border-white flex items-center justify-center ${
                         isDeleting 
                             ? 'bg-red-400 cursor-not-allowed' 
-                            : 'bg-red-600 hover:bg-red-700'
+                            : 'bg-red-600 hover:bg-red-700 hover:scale-110'
                     }`}
                     title="Eliminar mi post-it"
                 >
-                    <X size={10} />
+                    <X size={12} className="text-white font-bold" />
                 </button>
             )}
 

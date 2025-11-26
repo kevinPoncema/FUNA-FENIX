@@ -96,8 +96,8 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
                     <h3 className="text-2xl font-extrabold text-purple-600 flex items-center gap-2">
                         <Users size={24} className="text-purple-600" /> Administrar Equipo
                     </h3>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-900 transition p-1">
-                        <X size={20} className="text-gray-500" />
+                    <button onClick={onClose} className="text-red-500 hover:text-red-700 transition p-1">
+                        <X size={20} className="text-red-500" />
                     </button>
                 </div>
 
@@ -108,7 +108,7 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
                         placeholder="Nombre del Miembro (Ej: Juan Pérez)"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="p-2.5 rounded-lg border border-gray-300 w-full"
+                        className="p-2.5 rounded-lg border border-gray-300 w-full text-gray-900 bg-white"
                         required
                     />
                     <input
@@ -116,7 +116,7 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
                         placeholder="Rol (Ej: Frontend Dev)"
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
-                        className="p-2.5 rounded-lg border border-gray-300 w-full md:w-1/2"
+                        className="p-2.5 rounded-lg border border-gray-300 w-full md:w-1/2 text-gray-900 bg-white"
                     />
                     <button
                         type="submit"
@@ -160,14 +160,14 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
                                                 type="text"
                                                 value={editData.name}
                                                 onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1"
+                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1 text-gray-900 bg-white"
                                                 placeholder="Nombre"
                                             />
                                             <input
                                                 type="text"
                                                 value={editData.role}
                                                 onChange={(e) => setEditData({ ...editData, role: e.target.value })}
-                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1"
+                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1 text-gray-900 bg-white"
                                                 placeholder="Rol"
                                             />
                                         </div>

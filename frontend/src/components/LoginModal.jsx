@@ -41,7 +41,7 @@ const LoginModal = ({ isVisible, onClose, onLogin }) => {
                     <h2 className="text-xl font-bold text-gray-800">Admin Login</h2>
                     <button 
                         onClick={handleClose}
-                        className="text-gray-500 hover:text-gray-700 text-2xl"
+                        className="text-red-500 hover:text-red-700 text-2xl font-bold"
                     >
                         ×
                     </button>
@@ -56,7 +56,7 @@ const LoginModal = ({ isVisible, onClose, onLogin }) => {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
                             required
                             disabled={isLoading}
                         />
@@ -70,7 +70,7 @@ const LoginModal = ({ isVisible, onClose, onLogin }) => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-gray-900 bg-white"
                             required
                             disabled={isLoading}
                         />

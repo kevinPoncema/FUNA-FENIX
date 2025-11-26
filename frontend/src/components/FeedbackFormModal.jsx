@@ -92,8 +92,8 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
                     <h3 className="text-2xl font-extrabold text-indigo-600 flex items-center gap-2">
                         <Send size={24} /> Nuevo Post-it
                     </h3>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-900 transition p-1">
-                        <X size={20} />
+                    <button onClick={onClose} className="text-red-500 hover:text-red-700 transition p-1 rounded-full">
+                        <X size={20} className="text-red-500" />
                     </button>
                 </div>
 
@@ -184,7 +184,7 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
                     {/* Botón de Envío */}
                     <button
                         type="submit"
-                        className="w-full flex items-center justify-center gap-2 py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-white font-bold transition duration-150 shadow-lg"
+                        className="w-full flex items-center justify-center gap-2 py-3 mt-4 bg-green-600 hover:bg-green-700 rounded-lg text-white font-bold transition duration-150 shadow-lg"
                     >
                         <Send size={18} /> Publicar Post-it
                     </button>

@@ -13,7 +13,7 @@ const FloatingButtons = ({ onOpenFeedbackModal, onOpenManagementModal, isAdmin }
                 onClick={onOpenManagementModal}
                 className={`flex items-center gap-3 px-6 py-3 rounded-full text-white text-lg font-bold transition duration-300 shadow-2xl transform hover:scale-105 ${
                     isAdmin 
-                        ? 'bg-purple-500 hover:bg-purple-600 shadow-purple-500/50' 
+                        ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-600/50 border-2 border-purple-400' 
                         : 'bg-gray-500 hover:bg-gray-600 shadow-gray-500/50'
                 }`}
                 title={isAdmin ? "Administrar los miembros del equipo" : "Requiere permisos de administrador"}
@@ -25,7 +25,7 @@ const FloatingButtons = ({ onOpenFeedbackModal, onOpenManagementModal, isAdmin }
             {/* Botón para Añadir Post-it */}
             <button
                 onClick={onOpenFeedbackModal}
-                className="flex items-center gap-3 px-6 py-4 bg-green-500 hover:bg-green-600 rounded-full text-white text-xl font-bold transition duration-300 shadow-2xl shadow-green-500/50 transform hover:scale-105"
+                className="flex items-center gap-3 px-6 py-4 bg-green-600 hover:bg-green-700 rounded-full text-white text-xl font-bold transition duration-300 shadow-2xl shadow-green-600/50 transform hover:scale-105 border-2 border-green-400"
                 title="Añadir un nuevo post-it"
             >
                 <Send size={24} className="text-white" /> Añadir Post-it
