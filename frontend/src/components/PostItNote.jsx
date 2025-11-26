@@ -7,14 +7,12 @@ import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp } from 'lucide-react';
 const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) => {
     const getCategoryInfo = (category) => {
         switch(category) {
-            case 'positivo':
-                return { icon: ThumbsUp, label: 'Positivo' };
-            case 'negativo':
-                return { icon: User, label: 'Constructivo' };
-            case 'sugerencia':
-                return { icon: Lightbulb, label: 'Sugerencia' };
-            case 'mejora':
-                return { icon: TrendingUp, label: 'Mejora' };
+            case 'achievements':
+                return { icon: ThumbsUp, label: 'Logros' };
+            case 'qualities':
+                return { icon: User, label: 'Cualidades' };
+            case 'potential':
+                return { icon: TrendingUp, label: 'Potencial' };
             default:
                 return { icon: Lightbulb, label: 'Feedback' };
         }

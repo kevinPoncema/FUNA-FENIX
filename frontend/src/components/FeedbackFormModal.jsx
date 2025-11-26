@@ -8,7 +8,7 @@ import { MAX_POSTIT_CHARS, MAX_TITLE_CHARS } from '../api/constants.js';
 const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
     const [formData, setFormData] = useState({
         targetId: '',
-        category: 'positivo',
+        category: 'achievements',
         title: '',
         text: '',
     });
@@ -24,7 +24,7 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
             // Resetear al cerrar
             setFormData({
                 targetId: members.length > 0 ? members[0].id : '',
-                category: 'positivo',
+                category: 'achievements',
                 title: '',
                 text: '',
             });
@@ -67,24 +67,19 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
     // Definiciones de categorías para el formulario
     const categories = [
         { 
-            id: 'positivo', 
-            title: 'Feedback Positivo 🟢', 
+            id: 'achievements', 
+            title: 'Logros 🟢', 
             description: 'Reconocimiento de logros y fortalezas.' 
         },
         { 
-            id: 'negativo', 
-            title: 'Feedback Constructivo 🔴', 
-            description: 'Aspectos que necesitan mejora.' 
+            id: 'qualities', 
+            title: 'Cualidades 🔴', 
+            description: 'Aspectos positivos y habilidades destacadas.' 
         },
         { 
-            id: 'sugerencia', 
-            title: 'Sugerencias 🟡', 
-            description: 'Ideas para optimizar procesos o resultados.' 
-        },
-        { 
-            id: 'mejora', 
-            title: 'Oportunidades de Mejora 🔵', 
-            description: 'Áreas específicas de desarrollo profesional.' 
+            id: 'potential', 
+            title: 'Potencial �', 
+            description: 'Áreas de crecimiento y desarrollo futuro.' 
         },
     ];
 
@@ -123,7 +118,7 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
                                 </option>
                             ))}
                         </select>
-                    </div>
+                    </div>elimina lo que hictes de la migracion y modfica el test el request y el controller y todo loq ue s
 
                     {/* Campo Categoría */}
                     <div>

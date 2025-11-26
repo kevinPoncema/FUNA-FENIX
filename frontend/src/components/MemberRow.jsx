@@ -8,38 +8,31 @@ import PostItNote from './PostItNote.jsx';
 const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpenDetail }) => {
     const categories = [
         { 
-            id: 'positivo', 
-            title: 'Feedback Positivo', 
+            id: 'achievements', 
+            title: 'Logros', 
             icon: ThumbsUp, 
             color: 'bg-green-300', 
-            filter: 'positivo' 
+            filter: 'achievements' 
         },
         { 
-            id: 'negativo', 
-            title: 'Feedback Constructivo', 
+            id: 'qualities', 
+            title: 'Cualidades', 
             icon: AlertTriangle, 
-            color: 'bg-red-300', 
-            filter: 'negativo' 
-        },
-        { 
-            id: 'sugerencia', 
-            title: 'Sugerencias', 
-            icon: Lightbulb, 
-            color: 'bg-yellow-300', 
-            filter: 'sugerencia' 
-        },
-        { 
-            id: 'mejora', 
-            title: 'Oportunidades de Mejora', 
-            icon: TrendingUp, 
             color: 'bg-blue-300', 
-            filter: 'mejora' 
+            filter: 'qualities' 
+        },
+        { 
+            id: 'potential', 
+            title: 'Potencial', 
+            icon: TrendingUp, 
+            color: 'bg-yellow-300', 
+            filter: 'potential' 
         },
     ];
 
     // Agrupamos el feedback por categoría para esta persona
     const feedbackByCategory = useMemo(() => {
-        const grouped = { positivo: [], negativo: [], sugerencia: [], mejora: [] };
+        const grouped = { achievements: [], qualities: [], potential: [] };
         feedbackData
             .filter(f => f.target_id === member.id)
             .forEach(f => {

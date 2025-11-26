@@ -11,29 +11,23 @@ const PostItDetailModal = ({ isVisible, onClose, feedback, members }) => {
     
     const categoryDetails = useMemo(() => {
         const categories = {
-            positivo: { 
-                title: 'Feedback Positivo', 
+            achievements: { 
+                title: 'Logros', 
                 icon: ThumbsUp, 
                 color: 'text-green-600', 
                 bg: 'bg-green-100' 
             },
-            negativo: { 
-                title: 'Feedback Constructivo', 
+            qualities: { 
+                title: 'Cualidades', 
                 icon: AlertTriangle, 
-                color: 'text-red-600', 
-                bg: 'bg-red-100' 
-            },
-            sugerencia: { 
-                title: 'Sugerencia', 
-                icon: Lightbulb, 
-                color: 'text-yellow-600', 
-                bg: 'bg-yellow-100' 
-            },
-            mejora: { 
-                title: 'Oportunidad de Mejora', 
-                icon: TrendingUp, 
                 color: 'text-blue-600', 
                 bg: 'bg-blue-100' 
+            },
+            potential: { 
+                title: 'Potencial', 
+                icon: TrendingUp, 
+                color: 'text-yellow-600', 
+                bg: 'bg-yellow-100' 
             },
         };
         return categories[feedback.category] || { 
