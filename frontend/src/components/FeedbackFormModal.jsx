@@ -8,7 +8,7 @@ import { MAX_POSTIT_CHARS, MAX_TITLE_CHARS } from '../api/constants.js';
 const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
     const [formData, setFormData] = useState({
         targetId: '',
-        category: 'achievements',
+        category: 'positivo',
         title: '',
         text: '',
     });
@@ -24,7 +24,7 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
             // Resetear al cerrar
             setFormData({
                 targetId: members.length > 0 ? members[0].id : '',
-                category: 'achievements',
+                category: 'positivo',
                 title: '',
                 text: '',
             });
@@ -67,19 +67,24 @@ const FeedbackFormModal = ({ members, isVisible, onClose, onSave }) => {
     // Definiciones de categorías para el formulario
     const categories = [
         { 
-            id: 'achievements', 
-            title: 'Logros Destacados (Acción 🟢)', 
-            description: 'Acciones o tareas específicas que hizo bien.' 
+            id: 'positivo', 
+            title: 'Feedback Positivo 🟢', 
+            description: 'Reconocimiento de logros y fortalezas.' 
         },
         { 
-            id: 'qualities', 
-            title: 'Cualidades Esenciales (Ser 🟡)', 
-            description: 'Atributos de personalidad o habilidades blandas.' 
+            id: 'negativo', 
+            title: 'Feedback Constructivo 🔴', 
+            description: 'Aspectos que necesitan mejora.' 
         },
         { 
-            id: 'potential', 
-            title: 'Puntos de Potencial (Crecimiento 🔵)', 
-            description: 'Deseos de mejora dirigidos al comportamiento/proceso. (Regla de Oro)' 
+            id: 'sugerencia', 
+            title: 'Sugerencias 🟡', 
+            description: 'Ideas para optimizar procesos o resultados.' 
+        },
+        { 
+            id: 'mejora', 
+            title: 'Oportunidades de Mejora 🔵', 
+            description: 'Áreas específicas de desarrollo profesional.' 
         },
     ];
 

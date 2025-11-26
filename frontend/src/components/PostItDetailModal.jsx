@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { X, ThumbsUp, User, Lightbulb, AlertTriangle } from 'lucide-react';
+import { X, ThumbsUp, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react';
 
 /**
  * Componente Modal para mostrar el contenido completo del Post-it
@@ -7,32 +7,38 @@ import { X, ThumbsUp, User, Lightbulb, AlertTriangle } from 'lucide-react';
 const PostItDetailModal = ({ isVisible, onClose, feedback, members }) => {
     if (!isVisible || !feedback) return null;
 
-    const targetMember = members.find(m => m.id === feedback.targetId);
+    const targetMember = members.find(m => m.id === feedback.target_id);
     
     const categoryDetails = useMemo(() => {
         const categories = {
-            achievements: { 
-                title: 'Logro Destacado', 
+            positivo: { 
+                title: 'Feedback Positivo', 
                 icon: ThumbsUp, 
                 color: 'text-green-600', 
                 bg: 'bg-green-100' 
             },
-            qualities: { 
-                title: 'Cualidad Esencial', 
-                icon: User, 
+            negativo: { 
+                title: 'Feedback Constructivo', 
+                icon: AlertTriangle, 
+                color: 'text-red-600', 
+                bg: 'bg-red-100' 
+            },
+            sugerencia: { 
+                title: 'Sugerencia', 
+                icon: Lightbulb, 
                 color: 'text-yellow-600', 
                 bg: 'bg-yellow-100' 
             },
-            potential: { 
-                title: 'Punto de Potencial', 
-                icon: Lightbulb, 
-                color: 'text-cyan-600', 
-                bg: 'bg-cyan-100' 
+            mejora: { 
+                title: 'Oportunidad de Mejora', 
+                icon: TrendingUp, 
+                color: 'text-blue-600', 
+                bg: 'bg-blue-100' 
             },
         };
         return categories[feedback.category] || { 
-            title: 'Desconocido', 
-            icon: AlertTriangle, 
+            title: 'Feedback', 
+            icon: Lightbulb, 
             color: 'text-gray-600', 
             bg: 'bg-gray-100' 
         };

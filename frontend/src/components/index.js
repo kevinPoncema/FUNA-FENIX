@@ -5,6 +5,7 @@ export { default as FeedbackFormModal } from './FeedbackFormModal.jsx';
 export { default as FloatingButtons } from './FloatingButtons.jsx';
 export { default as Header } from './Header.jsx';
 export { default as Loading } from './Loading.jsx';
+export { default as LoginModal } from './LoginModal.jsx';
 export { default as MainBoard } from './MainBoard.jsx';
 export { default as MemberManagementModal } from './MemberManagementModal.jsx';
 export { default as MemberRow } from './MemberRow.jsx';

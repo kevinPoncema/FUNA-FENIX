@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Zap, User, ChevronsUp } from 'lucide-react';
+import { ThumbsUp, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react';
 import PostItNote from './PostItNote.jsx';
 
 /**
@@ -8,33 +8,40 @@ import PostItNote from './PostItNote.jsx';
 const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpenDetail }) => {
     const categories = [
         { 
-            id: 'achievements', 
-            title: 'Logros Destacados', 
-            icon: Zap, 
+            id: 'positivo', 
+            title: 'Feedback Positivo', 
+            icon: ThumbsUp, 
             color: 'bg-green-300', 
-            filter: 'achievements' 
+            filter: 'positivo' 
         },
         { 
-            id: 'qualities', 
-            title: 'Cualidades Esenciales', 
-            icon: User, 
-            color: 'bg-yellow-200', 
-            filter: 'qualities' 
+            id: 'negativo', 
+            title: 'Feedback Constructivo', 
+            icon: AlertTriangle, 
+            color: 'bg-red-300', 
+            filter: 'negativo' 
         },
         { 
-            id: 'potential', 
-            title: 'Puntos de Potencial', 
-            icon: ChevronsUp, 
-            color: 'bg-cyan-300', 
-            filter: 'potential' 
+            id: 'sugerencia', 
+            title: 'Sugerencias', 
+            icon: Lightbulb, 
+            color: 'bg-yellow-300', 
+            filter: 'sugerencia' 
+        },
+        { 
+            id: 'mejora', 
+            title: 'Oportunidades de Mejora', 
+            icon: TrendingUp, 
+            color: 'bg-blue-300', 
+            filter: 'mejora' 
         },
     ];
 
     // Agrupamos el feedback por categoría para esta persona
     const feedbackByCategory = useMemo(() => {
-        const grouped = { achievements: [], qualities: [], potential: [] };
+        const grouped = { positivo: [], negativo: [], sugerencia: [], mejora: [] };
         feedbackData
-            .filter(f => f.targetId === member.id)
+            .filter(f => f.target_id === member.id)
             .forEach(f => {
                 if (grouped[f.category]) {
                     grouped[f.category].push(f);
@@ -73,7 +80,7 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
                                         key={feedback.id}
                                         feedback={feedback}
                                         colorClass={cat.color}
-                                        isAuthor={feedback.authorId === currentUserId}
+                                        isAuthor={feedback.owner_id === currentUserId}
                                         onDelete={deleteFeedback}
                                         onOpenDetail={onOpenDetail}
                                     />

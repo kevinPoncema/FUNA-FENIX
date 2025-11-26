@@ -1,12 +1,27 @@
 import React, { useMemo } from 'react';
-import { X, ThumbsUp, User, Lightbulb, ZoomIn } from 'lucide-react';
+import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp } from 'lucide-react';
 
 /**
  * Componente para una única nota Post-it
  */
 const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) => {
-    const Icon = feedback.category === 'achievements' ? ThumbsUp : 
-                 feedback.category === 'qualities' ? User : Lightbulb;
+    const getCategoryInfo = (category) => {
+        switch(category) {
+            case 'positivo':
+                return { icon: ThumbsUp, label: 'Positivo' };
+            case 'negativo':
+                return { icon: User, label: 'Constructivo' };
+            case 'sugerencia':
+                return { icon: Lightbulb, label: 'Sugerencia' };
+            case 'mejora':
+                return { icon: TrendingUp, label: 'Mejora' };
+            default:
+                return { icon: Lightbulb, label: 'Feedback' };
+        }
+    };
+
+    const categoryInfo = getCategoryInfo(feedback.category);
+    const Icon = categoryInfo.icon;
     
     const rotation = useMemo(() => {
         const min = -1;
@@ -25,8 +40,7 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) 
             >
                 <p className="text-sm font-bold mb-1 italic opacity-90 flex items-center gap-1 text-gray-800 border-b border-gray-400/50 pb-0.5">
                     <Icon size={14} className="text-gray-800" />
-                    {feedback.category === 'achievements' ? 'Logro' : 
-                     feedback.category === 'qualities' ? 'Cualidad' : 'Potencial'}
+                    {categoryInfo.label}
                 </p>
                 
                 {/* Título del Post-it */}

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useSimpleLocalStorage } from './api/useSimpleLocalStorage.js';
+import { useAPI } from './api/useAPI.js';
 import Loading from './components/Loading.jsx';
 import ErrorDisplay from './components/ErrorDisplay.jsx';
 import Header from './components/Header.jsx';
@@ -9,6 +9,7 @@ import MainBoard from './components/MainBoard.jsx';
 import FeedbackFormModal from './components/FeedbackFormModal.jsx';
 import MemberManagementModal from './components/MemberManagementModal.jsx';
 import PostItDetailModal from './components/PostItDetailModal.jsx';
+import LoginModal from './components/LoginModal.jsx';
 
 /**
  * Componente Principal de la Aplicación
@@ -18,17 +19,23 @@ const App = () => {
         feedbackData, 
         isLoading, 
         error, 
+        user,
         userId, 
         teamMembers, 
+        isAdmin,
         addFeedback, 
         deleteFeedback, 
         addMember, 
         deleteMember,
-        updateMember
-    } = useSimpleLocalStorage();
+        updateMember,
+        loginAsAdmin,
+        logout,
+        clearError
+    } = useAPI();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isManagementModalOpen, setIsManagementOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     
     // Estado para el modal de detalle del post-it
     const [detailModalState, setDetailModalState] = useState({ 
@@ -41,7 +48,21 @@ const App = () => {
     };
 
     const handleToggleModal = () => setIsModalOpen(prev => !prev);
-    const handleToggleManagementModal = () => setIsManagementOpen(prev => !prev);
+    const handleToggleManagementModal = () => {
+        if (!isAdmin) {
+            setIsLoginModalOpen(true);
+            return;
+        }
+        setIsManagementOpen(prev => !prev);
+    };
+    
+    const handleLogin = async (email, password) => {
+        await loginAsAdmin(email, password);
+    };
+    
+    const handleLogout = () => {
+        logout();
+    };
     
     // Función para abrir el modal de detalle
     const handleOpenDetailModal = useCallback((feedback) => {
@@ -58,7 +79,16 @@ const App = () => {
     }
 
     if (error) {
-        return <ErrorDisplay error={error} />;
+        return (
+            <div className="min-h-screen p-6 font-sans bg-cover bg-fixed"
+                style={{ 
+                    backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
+                    backgroundBlendMode: 'multiply', 
+                    backgroundColor: '#2f5b40' 
+                }}>
+                <ErrorDisplay error={error} onRetry={clearError} />
+            </div>
+        );
     }
 
     return (
@@ -91,7 +121,7 @@ const App = () => {
             </style>
             
             {/* Información del Usuario */}
-            <UserInfo userId={userId} />
+            <UserInfo user={user} onLogout={isAdmin ? handleLogout : null} />
 
             {/* Header */}
             <Header />
@@ -100,6 +130,7 @@ const App = () => {
             <FloatingButtons 
                 onOpenFeedbackModal={handleToggleModal}
                 onOpenManagementModal={handleToggleManagementModal}
+                isAdmin={isAdmin}
             />
 
             {/* Tablero Principal */}
@@ -120,13 +151,22 @@ const App = () => {
             />
 
             {/* Modal de Administración de Miembros */}
-            <MemberManagementModal
-                members={teamMembers}
-                isVisible={isManagementModalOpen}
-                onClose={handleToggleManagementModal}
-                onAdd={addMember}
-                onDelete={deleteMember}
-                onUpdate={updateMember}
+            {isAdmin && (
+                <MemberManagementModal
+                    members={teamMembers}
+                    isVisible={isManagementModalOpen}
+                    onClose={handleToggleManagementModal}
+                    onAdd={addMember}
+                    onDelete={deleteMember}
+                    onUpdate={updateMember}
+                />
+            )}
+            
+            {/* Modal de Login para Admin */}
+            <LoginModal
+                isVisible={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+                onLogin={handleLogin}
             />
             
             {/* Modal de Detalle de Post-it */}

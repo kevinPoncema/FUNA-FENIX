@@ -3,10 +3,26 @@ import React from 'react';
 /**
  * Componente para mostrar información del usuario
  */
-const UserInfo = ({ userId }) => {
+const UserInfo = ({ user, onLogout }) => {
+    if (!user) return null;
+
     return (
         <div className="fixed top-2 right-2 text-xs text-gray-200 bg-black/50 p-2 rounded-lg shadow-md z-40">
-            Tu ID de Usuario (Autor): <span className="font-mono text-cyan-300">{userId}</span>
+            <div className="flex items-center gap-2">
+                <div>
+                    <span className="font-medium">{user.name}</span>
+                    <span className="text-cyan-300 ml-1">({user.role})</span>
+                </div>
+                {onLogout && (
+                    <button 
+                        onClick={onLogout}
+                        className="ml-2 px-2 py-1 text-xs bg-red-600 hover:bg-red-700 rounded text-white"
+                        title="Logout"
+                    >
+                        Exit
+                    </button>
+                )}
+            </div>
         </div>
     );
 };
