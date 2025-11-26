@@ -109,4 +109,20 @@ class TeamMemberController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Display a listing of team members with their feedbacks.
+     */
+    public function indexWithFeedbacks(): JsonResponse
+    {
+        try {
+            $teamMembers = $this->teamMemberServices->getAllTeamMembersWithFeedbacks();
+            return response()->json($teamMembers, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving team members with feedbacks',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

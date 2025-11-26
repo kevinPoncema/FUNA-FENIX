@@ -15,7 +15,9 @@ class TeamMember extends Model
         'role',
     ];
 
-    public function receivedFeedback(): HasMany
+
+
+    public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class, 'target_id');
     }

@@ -35,4 +35,9 @@ class TeamMemberServices
     {
         return $this->teamMemberRepo->deleteTeamMember($id);
     }
+
+    public function getAllTeamMembersWithFeedbacks()
+    {
+        return $this->teamMemberRepo->getAllTeamMembersWithFeedbacks();
+    }
 }

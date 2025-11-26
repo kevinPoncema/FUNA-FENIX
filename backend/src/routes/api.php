@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('team-members', TeamMemberController::class);
 Route::apiResource('feedbacks', FeedbackController::class);
+Route::get('team-members-with-feedbacks', [TeamMemberController::class, 'indexWithFeedbacks']);

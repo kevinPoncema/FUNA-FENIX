@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Models\TeamMember;
+use App\Models\Feedback;
 use Illuminate\Database\Eloquent\Collection;
 class TeamMemberRepo
 {
@@ -30,5 +31,10 @@ class TeamMemberRepo
     {
         $teamMember = TeamMember::findOrFail($id);
         return $teamMember->delete();
+    }
+
+    public function getAllTeamMembersWithFeedbacks(): Collection
+    {
+        return TeamMember::with('feedbacks')->get();
     }
 }
