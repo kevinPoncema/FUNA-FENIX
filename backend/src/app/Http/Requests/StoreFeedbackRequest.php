@@ -23,7 +23,7 @@ class StoreFeedbackRequest extends FormRequest
     {
         return [
             'target_id' => 'required|exists:team_members,id',
-            'category' => 'required|string|in:positivo,negativo,sugerencia,mejora',
+            'category' => 'required|string|in:achievements,qualities,potential',
             'title' => 'required|string|max:50',
             'text' => 'required|string|max:300',
         ];
@@ -39,7 +39,7 @@ class StoreFeedbackRequest extends FormRequest
             'target_id.exists' => 'El destinatario seleccionado no existe.',
             'category.required' => 'La categoría es obligatoria.',
             'category.string' => 'La categoría debe ser texto.',
-            'category.in' => 'La categoría debe ser: positivo, negativo, sugerencia o mejora.',
+            'category.in' => 'La categoría debe ser: achievements, qualities o potential.',
             'title.required' => 'El título es obligatorio.',
             'title.string' => 'El título debe ser texto.',
             'title.max' => 'El título no puede exceder 50 caracteres.',
