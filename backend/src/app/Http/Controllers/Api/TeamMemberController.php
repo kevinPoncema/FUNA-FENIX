@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Api\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTeamMemberRequest;
 use App\Http\Requests\UpdateTeamMemberRequest;
-use Illuminate\Http\Request;
+use App\Http\Services\TeamMemberServices;
 
 class TeamMemberController extends Controller
 {

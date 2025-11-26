@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\TeamMemberController;
+use App\Http\Controllers\Api\FeedbackController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('team-members', App\Http\Api\Controllers\TeamMemberController::class);
-Route::apiResource('feedbacks', App\Http\Controllers\Api\FeedbackController::class);
+Route::apiResource('team-members', TeamMemberController::class);
+Route::apiResource('feedbacks', FeedbackController::class);

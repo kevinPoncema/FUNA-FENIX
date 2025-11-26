@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Services;
-use App\Repository\FeedbackRepo;
+use App\Repositories\FeedbackRepo;
 class FeedbackServices
 {
     protected FeedbackRepo $feedbackRepo;

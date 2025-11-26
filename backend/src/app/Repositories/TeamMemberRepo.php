@@ -1,5 +1,5 @@
 <?php
-namespace App\Repository;
+namespace App\Repositories;
 use App\Models\TeamMember;
 use Illuminate\Database\Eloquent\Collection;
 class TeamMemberRepo

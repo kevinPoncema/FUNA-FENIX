@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Services;
-use App\Repository\TeamMemberRepo;
+use App\Repositories\TeamMemberRepo;
 
 class TeamMemberServices
 {
