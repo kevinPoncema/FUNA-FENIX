@@ -5,7 +5,7 @@ import MemberRow from './MemberRow.jsx';
 /**
  * Componente principal del tablero
  */
-const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDetail }) => {
+const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDetail, webSocketFeedbackIds }) => {
     return (
         <main className="bg-black/40 p-4 rounded-xl shadow-inner border border-white/20">
             {teamMembers.length > 0 ? (
@@ -17,6 +17,7 @@ const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDe
                         currentUserId={userId}
                         deleteFeedback={deleteFeedback}
                         onOpenDetail={onOpenDetail}
+                        webSocketFeedbackIds={webSocketFeedbackIds}
                     />
                 ))
             ) : (

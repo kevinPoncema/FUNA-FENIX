@@ -5,7 +5,7 @@ import PostItNote from './PostItNote.jsx';
 /**
  * Componente para la Tarjeta/Fila de un Miembro
  */
-const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpenDetail }) => {
+const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpenDetail, webSocketFeedbackIds }) => {
     const [justCreated, setJustCreated] = useState(false);
 
     // Detectar si es un miembro recién creado
@@ -102,6 +102,7 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
                                         isAuthor={feedback.owner_id === currentUserId}
                                         onDelete={deleteFeedback}
                                         onOpenDetail={onOpenDetail}
+                                        webSocketFeedbackIds={webSocketFeedbackIds}
                                     />
                                 ))
                             ) : (

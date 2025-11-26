@@ -18,6 +18,12 @@ export const useAPI = () => {
         feedback: 0,
         teamMember: 0,
     });
+    
+    // Estados para trackear feedbacks con animaciones WebSocket
+    const [webSocketFeedbackIds, setWebSocketFeedbackIds] = useState({
+        new: new Set(),
+        deleting: new Set(),
+    });
 
     // Función para manejar errores
     const handleError = (error) => {
@@ -105,6 +111,21 @@ export const useAPI = () => {
                     );
                 }
                 console.log('Adding new feedback from WebSocket:', data.feedback.id);
+                
+                // Marcar como nuevo para animación
+                setWebSocketFeedbackIds(current => ({
+                    ...current,
+                    new: new Set([...current.new, data.feedback.id])
+                }));
+                
+                // Quitar animación después de 600ms
+                setTimeout(() => {
+                    setWebSocketFeedbackIds(current => ({
+                        ...current,
+                        new: new Set([...current.new].filter(id => id !== data.feedback.id))
+                    }));
+                }, 600);
+                
                 return [...prev, data.feedback];
             });
         });
@@ -122,13 +143,25 @@ export const useAPI = () => {
         feedbackChannel.listen('FeedbackDeleted', (data) => {
             console.log('Feedback deleted via WebSocket:', data);
             
-            setFeedbackData(prev => prev.filter(feedback => feedback.id !== data.feedbackId));
+            // Marcar como eliminándose para animación
+            setWebSocketFeedbackIds(current => ({
+                ...current,
+                deleting: new Set([...current.deleting, data.feedbackId])
+            }));
+            
+            // Eliminar después de la animación
+            setTimeout(() => {
+                setFeedbackData(prev => prev.filter(feedback => feedback.id !== data.feedbackId));
+                setWebSocketFeedbackIds(current => ({
+                    ...current,
+                    deleting: new Set([...current.deleting].filter(id => id !== data.feedbackId))
+                }));
+            }, 400);
         });
 
-        // Canal de team members (solo para admins)
+        // Canal de team members (TODOS los usuarios necesitan escuchar cambios)
         let teamMemberChannel = null;
-        if (apiService.isAdmin()) {
-            teamMemberChannel = echo.channel('team-members');
+        teamMemberChannel = echo.channel('team-members');
             
             // Listener para miembro creado
             teamMemberChannel.listen('TeamMemberCreated', (data) => {
@@ -165,7 +198,6 @@ export const useAPI = () => {
                 // También eliminar feedbacks relacionados
                 setFeedbackData(prev => prev.filter(feedback => feedback.target_id !== data.teamMemberId));
             });
-        }
 
         // Cleanup function
         return () => {
@@ -352,6 +384,9 @@ export const useAPI = () => {
         feedbackData,
         isInitialized,
         isAuthenticated: apiService.isAuthenticated(),
+        
+        // Estados de animación WebSocket
+        webSocketFeedbackIds,
         
         // Funciones de autenticación
         loginAsAdmin,

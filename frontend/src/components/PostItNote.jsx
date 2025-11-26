@@ -4,11 +4,11 @@ import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp } from 'lucide-react';
 /**
  * Componente para una única nota Post-it
  */
-const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) => {
+const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, webSocketFeedbackIds }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [justCreated, setJustCreated] = useState(false);
 
-    // Detectar si es un feedback recién creado
+    // Detectar si es un feedback recién creado localmente
     useEffect(() => {
         const now = Date.now();
         const createdAt = new Date(feedback.created_at).getTime();
@@ -21,6 +21,10 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) 
             return () => clearTimeout(timer);
         }
     }, [feedback.created_at]);
+
+    // Verificar si tiene animaciones WebSocket
+    const isNewFromWebSocket = webSocketFeedbackIds?.new?.has(feedback.id) || false;
+    const isDeletingFromWebSocket = webSocketFeedbackIds?.deleting?.has(feedback.id) || false;
 
     const getCategoryInfo = (category) => {
         switch(category) {
@@ -57,7 +61,8 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) 
     // Clases de animación
     const animationClasses = `
         ${justCreated ? 'animate-bounce scale-110' : ''}
-        ${isDeleting ? 'animate-pulse scale-75 opacity-30' : ''}
+        ${isNewFromWebSocket ? 'animate-pulse scale-110 ring-2 ring-blue-400' : ''}
+        ${isDeleting || isDeletingFromWebSocket ? 'animate-pulse scale-75 opacity-30' : ''}
         transition-all duration-300 ease-in-out
     `;
 

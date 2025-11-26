@@ -25,6 +25,7 @@ const App = () => {
         teamMembers, 
         isAdmin,
         isAuthenticated,
+        webSocketFeedbackIds,
         addFeedback, 
         deleteFeedback, 
         addMember, 
@@ -180,6 +181,7 @@ const App = () => {
                 userId={userId}
                 deleteFeedback={deleteFeedback}
                 onOpenDetail={handleOpenDetailModal}
+                webSocketFeedbackIds={webSocketFeedbackIds}
             />
 
             {/* Modal del Formulario de Feedback */}
