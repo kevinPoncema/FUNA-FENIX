@@ -57,24 +57,45 @@ class HybridChannel {
     }
 }
 
-// Configuración de Echo real (para cuando tengamos un servidor de broadcasting)
+// Configuración de Echo real (ahora conecta al servidor Soketi)
 const createRealEcho = () => {
     window.Pusher = Pusher;
     
-    return new Echo({
+    const config = {
         broadcaster: 'pusher',
         key: import.meta.env.VITE_PUSHER_APP_KEY || 'local-key',
-        wsHost: import.meta.env.VITE_PUSHER_HOST || '127.0.0.1',
+        wsHost: import.meta.env.VITE_PUSHER_HOST || 'localhost',
         wsPort: import.meta.env.VITE_PUSHER_PORT || 6001,
         wssPort: import.meta.env.VITE_PUSHER_PORT || 6001,
         forceTLS: false,
         enabledTransports: ['ws', 'wss'],
         cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || 'mt1',
+        disableStats: true,
+    };
+    
+    console.log('Echo configuration:', config);
+    
+    const echo = new Echo(config);
+    
+    // Log connection events
+    echo.connector.pusher.connection.bind('connected', () => {
+        console.log('✅ Connected to WebSocket server');
     });
+    
+    echo.connector.pusher.connection.bind('disconnected', () => {
+        console.log('❌ Disconnected from WebSocket server');
+    });
+    
+    echo.connector.pusher.connection.bind('error', (error) => {
+        console.error('❌ WebSocket connection error:', error);
+    });
+    
+    return echo;
 };
 
-// Por ahora usamos HybridEcho
-export const echo = new HybridEcho();
+// Por ahora usamos HybridEcho - cambiar a createRealEcho() para usar servidor real
+const USE_REAL_ECHO = true; // Cambiar a true para usar Soketi
+export const echo = USE_REAL_ECHO ? createRealEcho() : new HybridEcho();
 
 // Función para cambiar a Echo real cuando esté listo
 export const initializeRealEcho = () => {

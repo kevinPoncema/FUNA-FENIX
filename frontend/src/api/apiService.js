@@ -2,8 +2,6 @@
  * Servicio de API simplificado para comunicarse con el backend Laravel
  */
 
-import echo from './echo.js';
-
 const API_BASE_URL = 'http://localhost:8000/api';
 
 class APIService {
@@ -134,9 +132,6 @@ class APIService {
             body: JSON.stringify({ name, role }),
         });
         
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('team-members', 'TeamMemberCreated', { teamMember: result });
-        
         return result;
     }
 
@@ -146,9 +141,6 @@ class APIService {
             body: JSON.stringify({ name, role }),
         });
         
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('team-members', 'TeamMemberUpdated', { teamMember: result });
-        
         return result;
     }
 
@@ -156,9 +148,6 @@ class APIService {
         await this.request(`/team-members/${id}`, {
             method: 'DELETE',
         });
-        
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('team-members', 'TeamMemberDeleted', { teamMemberId: parseInt(id) });
     }
 
     // Métodos para Feedback
@@ -177,9 +166,6 @@ class APIService {
             }),
         });
         
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('feedbacks', 'FeedbackCreated', { feedback: result });
-        
         return result;
     }
 
@@ -194,9 +180,6 @@ class APIService {
             }),
         });
         
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('feedbacks', 'FeedbackUpdated', { feedback: result });
-        
         return result;
     }
 
@@ -204,9 +187,6 @@ class APIService {
         await this.request(`/feedbacks/${id}`, {
             method: 'DELETE',
         });
-        
-        // Disparar evento simulado
-        echo._simulateEventFromAPI('feedbacks', 'FeedbackDeleted', { feedbackId: parseInt(id) });
     }
 
     // Verificar si el usuario está autenticado
