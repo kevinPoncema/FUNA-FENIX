@@ -1,10 +1,27 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp } from 'lucide-react';
 
 /**
  * Componente para una única nota Post-it
  */
 const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) => {
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [justCreated, setJustCreated] = useState(false);
+
+    // Detectar si es un feedback recién creado
+    useEffect(() => {
+        const now = Date.now();
+        const createdAt = new Date(feedback.created_at).getTime();
+        const isNew = now - createdAt < 2000; // Si fue creado hace menos de 2 segundos
+        
+        if (isNew) {
+            setJustCreated(true);
+            // Quitar la animación después de 500ms
+            const timer = setTimeout(() => setJustCreated(false), 500);
+            return () => clearTimeout(timer);
+        }
+    }, [feedback.created_at]);
+
     const getCategoryInfo = (category) => {
         switch(category) {
             case 'achievements':
@@ -27,9 +44,26 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) 
         return Math.random() * (max - min) + min;
     }, []);
 
+    const handleDelete = async (e) => {
+        e.stopPropagation();
+        setIsDeleting(true);
+        
+        // Esperar la animación antes de llamar onDelete
+        setTimeout(() => {
+            onDelete(feedback.id);
+        }, 300);
+    };
+
+    // Clases de animación
+    const animationClasses = `
+        ${justCreated ? 'animate-bounce scale-110' : ''}
+        ${isDeleting ? 'animate-pulse scale-75 opacity-30' : ''}
+        transition-all duration-300 ease-in-out
+    `;
+
     return (
         <div 
-            className={`relative p-3 shadow-lg rounded-sm transform transition duration-150 ease-in-out cursor-pointer ${colorClass} w-40 h-44 flex flex-col justify-between`} 
+            className={`relative p-3 shadow-lg rounded-sm transform cursor-pointer ${colorClass} w-40 h-44 flex flex-col justify-between ${animationClasses}`} 
             style={{ transform: `rotate(${rotation}deg)` }}
         >
             <div 
@@ -54,11 +88,13 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail }) 
 
             {isAuthor && (
                 <button
-                    onClick={(e) => { 
-                        e.stopPropagation(); 
-                        onDelete(feedback.id); 
-                    }}
-                    className="absolute -top-1 -right-1 p-0.5 rounded-full bg-red-600 hover:bg-red-700 text-white transition shadow-md z-20"
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className={`absolute -top-1 -right-1 p-0.5 rounded-full text-white transition shadow-md z-20 ${
+                        isDeleting 
+                            ? 'bg-red-400 cursor-not-allowed' 
+                            : 'bg-red-600 hover:bg-red-700'
+                    }`}
                     title="Eliminar mi post-it"
                 >
                     <X size={10} />

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { ThumbsUp, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react';
 import PostItNote from './PostItNote.jsx';
 
@@ -6,6 +6,22 @@ import PostItNote from './PostItNote.jsx';
  * Componente para la Tarjeta/Fila de un Miembro
  */
 const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpenDetail }) => {
+    const [justCreated, setJustCreated] = useState(false);
+
+    // Detectar si es un miembro recién creado
+    useEffect(() => {
+        const now = Date.now();
+        const createdAt = new Date(member.created_at).getTime();
+        const isNew = now - createdAt < 3000; // Si fue creado hace menos de 3 segundos
+        
+        if (isNew) {
+            setJustCreated(true);
+            // Quitar la animación después de 1 segundo
+            const timer = setTimeout(() => setJustCreated(false), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [member.created_at]);
+
     const categories = [
         { 
             id: 'achievements', 
@@ -43,16 +59,26 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
         return grouped;
     }, [feedbackData, member.id]);
 
+    // Clases de animación para nuevos miembros
+    const memberAnimationClasses = justCreated 
+        ? 'animate-pulse bg-purple-900/40 border-l-4 border-purple-400 scale-105' 
+        : '';
+
     return (
-        <div className="flex border-b border-white/10 py-4 items-start gap-4 hover:bg-black/20 transition duration-150">
+        <div className={`flex border-b border-white/10 py-4 items-start gap-4 hover:bg-black/20 transition-all duration-300 ${memberAnimationClasses}`}>
             
             {/* Columna de Miembro (Izquierda) */}
             <div className="w-40 flex flex-col items-center justify-center p-2 pt-4 flex-shrink-0">
-                <div className="w-16 h-16 rounded-full bg-indigo-500/80 text-white flex items-center justify-center text-2xl font-extrabold border-2 border-white shadow-xl">
+                <div className={`w-16 h-16 rounded-full bg-indigo-500/80 text-white flex items-center justify-center text-2xl font-extrabold border-2 border-white shadow-xl transition-all duration-300 ${
+                    justCreated ? 'ring-4 ring-purple-400 ring-opacity-75' : ''
+                }`}>
                     {member.name.charAt(0)}
                 </div>
                 <h3 className="text-base font-bold text-white mt-2 text-center">{member.name}</h3>
                 <p className="text-xs text-indigo-300 text-center">({member.role})</p>
+                {justCreated && (
+                    <p className="text-xs text-purple-300 text-center mt-1 animate-bounce">¡Nuevo!</p>
+                )}
             </div>
 
             {/* Columnas de Feedback (Derecha) */}

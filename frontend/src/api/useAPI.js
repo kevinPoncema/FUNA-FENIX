@@ -95,44 +95,27 @@ export const useAPI = () => {
         feedbackChannel.listen('FeedbackCreated', (data) => {
             console.log('Feedback created via WebSocket:', data);
             
-            // Verificamos que no sea muy reciente (evita duplicados de acciones locales)
-            const now = Date.now();
-            const timeSinceLastAction = now - lastActionTime.feedback;
-            
-            // Si pasó menos de 2 segundos desde la última acción local, podría ser duplicado
-            if (timeSinceLastAction < 2000) {
-                // Verificamos si ya existe en el estado
-                setFeedbackData(prev => {
-                    const exists = prev.some(feedback => feedback.id === data.feedback.id);
-                    if (exists) {
-                        console.log('Feedback creation ignored (already exists):', data.feedback.id);
-                        return prev;
-                    }
-                    return [...prev, data.feedback];
-                });
-            } else {
-                // Si pasó tiempo suficiente, es seguro añadir
-                setFeedbackData(prev => {
-                    const exists = prev.some(feedback => feedback.id === data.feedback.id);
-                    return exists ? prev : [...prev, data.feedback];
-                });
-            }
+            setFeedbackData(prev => {
+                const exists = prev.some(feedback => feedback.id === data.feedback.id);
+                if (exists) {
+                    console.log('Feedback already exists, updating with server data:', data.feedback.id);
+                    // Actualizamos con los datos del servidor (por si hay diferencias)
+                    return prev.map(feedback => 
+                        feedback.id === data.feedback.id ? data.feedback : feedback
+                    );
+                }
+                console.log('Adding new feedback from WebSocket:', data.feedback.id);
+                return [...prev, data.feedback];
+            });
         });
 
         // Listener para feedback actualizado
         feedbackChannel.listen('FeedbackUpdated', (data) => {
             console.log('Feedback updated via WebSocket:', data);
             
-            setFeedbackData(prev => {
-                const exists = prev.some(feedback => feedback.id === data.feedback.id);
-                if (!exists) {
-                    console.log('Feedback to update not found:', data.feedback.id);
-                    return prev;
-                }
-                return prev.map(feedback => 
-                    feedback.id === data.feedback.id ? data.feedback : feedback
-                );
-            });
+            setFeedbackData(prev => prev.map(feedback => 
+                feedback.id === data.feedback.id ? data.feedback : feedback
+            ));
         });
 
         // Listener para feedback eliminado
@@ -151,44 +134,27 @@ export const useAPI = () => {
             teamMemberChannel.listen('TeamMemberCreated', (data) => {
                 console.log('Team member created via WebSocket:', data);
                 
-                // Verificamos que no sea muy reciente (evita duplicados de acciones locales)
-                const now = Date.now();
-                const timeSinceLastAction = now - lastActionTime.teamMember;
-                
-                // Si pasó menos de 2 segundos desde la última acción local, podría ser duplicado
-                if (timeSinceLastAction < 2000) {
-                    // Verificamos si ya existe en el estado
-                    setTeamMembers(prev => {
-                        const exists = prev.some(member => member.id === data.teamMember.id);
-                        if (exists) {
-                            console.log('Team member creation ignored (already exists):', data.teamMember.id);
-                            return prev;
-                        }
-                        return [...prev, data.teamMember];
-                    });
-                } else {
-                    // Si pasó tiempo suficiente, es seguro añadir
-                    setTeamMembers(prev => {
-                        const exists = prev.some(member => member.id === data.teamMember.id);
-                        return exists ? prev : [...prev, data.teamMember];
-                    });
-                }
+                setTeamMembers(prev => {
+                    const exists = prev.some(member => member.id === data.teamMember.id);
+                    if (exists) {
+                        console.log('Team member already exists, updating with server data:', data.teamMember.id);
+                        // Actualizamos con los datos del servidor (por si hay diferencias)
+                        return prev.map(member => 
+                            member.id === data.teamMember.id ? data.teamMember : member
+                        );
+                    }
+                    console.log('Adding new team member from WebSocket:', data.teamMember.id);
+                    return [...prev, data.teamMember];
+                });
             });
 
             // Listener para miembro actualizado
             teamMemberChannel.listen('TeamMemberUpdated', (data) => {
                 console.log('Team member updated via WebSocket:', data);
                 
-                setTeamMembers(prev => {
-                    const exists = prev.some(member => member.id === data.teamMember.id);
-                    if (!exists) {
-                        console.log('Team member to update not found:', data.teamMember.id);
-                        return prev;
-                    }
-                    return prev.map(member => 
-                        member.id === data.teamMember.id ? data.teamMember : member
-                    );
-                });
+                setTeamMembers(prev => prev.map(member => 
+                    member.id === data.teamMember.id ? data.teamMember : member
+                ));
             });
 
             // Listener para miembro eliminado

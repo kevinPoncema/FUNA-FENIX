@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users, X, Plus, Trash2, Edit, Save, XCircle } from 'lucide-react';
 
 /**
@@ -10,6 +10,37 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
     const [isSaving, setIsSaving] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({ name: '', role: '' });
+    const [deletingIds, setDeletingIds] = useState(new Set());
+    const [newMemberIds, setNewMemberIds] = useState(new Set());
+    const previousMembersRef = useRef([]);
+
+    // Detectar miembros nuevos
+    useEffect(() => {
+        const previousIds = new Set(previousMembersRef.current.map(m => m.id));
+        const currentIds = new Set(members.map(m => m.id));
+        
+        // Encontrar IDs nuevos
+        const newIds = members
+            .filter(m => !previousIds.has(m.id))
+            .map(m => m.id);
+
+        if (newIds.length > 0) {
+            setNewMemberIds(prev => {
+                const updated = new Set([...prev, ...newIds]);
+                // Quitar la animación después de 800ms
+                setTimeout(() => {
+                    setNewMemberIds(current => {
+                        const next = new Set(current);
+                        newIds.forEach(id => next.delete(id));
+                        return next;
+                    });
+                }, 800);
+                return updated;
+            });
+        }
+
+        previousMembersRef.current = [...members];
+    }, [members]);
 
     const handleAdd = async (e) => {
         e.preventDefault();
@@ -40,6 +71,20 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
     const handleCancelEdit = () => {
         setEditingId(null);
         setEditData({ name: '', role: '' });
+    };
+
+    const handleDelete = async (memberId) => {
+        setDeletingIds(prev => new Set([...prev, memberId]));
+        
+        // Esperar la animación antes de llamar onDelete
+        setTimeout(() => {
+            onDelete(memberId);
+            setDeletingIds(prev => {
+                const next = new Set(prev);
+                next.delete(memberId);
+                return next;
+            });
+        }, 400);
     };
 
     if (!isVisible) return null;
@@ -89,80 +134,100 @@ const MemberManagementModal = ({ members, isVisible, onClose, onAdd, onDelete, o
                     Miembros Actuales ({members.length})
                 </h4>
                 <ul className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                    {members.map((member) => (
-                        <li key={member.id} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-200">
-                            {editingId === member.id ? (
-                                /* Modo de edición */
-                                <div className="flex items-center gap-3 flex-1">
-                                    <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-sm">
-                                        {editData.name ? editData.name.charAt(0) : member.name.charAt(0)}
-                                    </div>
-                                    <div className="flex gap-2 flex-1">
-                                        <input
-                                            type="text"
-                                            value={editData.name}
-                                            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                            className="p-1.5 border border-gray-300 rounded text-sm flex-1"
-                                            placeholder="Nombre"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={editData.role}
-                                            onChange={(e) => setEditData({ ...editData, role: e.target.value })}
-                                            className="p-1.5 border border-gray-300 rounded text-sm flex-1"
-                                            placeholder="Rol"
-                                        />
-                                    </div>
-                                    <div className="flex gap-1">
-                                        <button
-                                            onClick={() => handleSaveEdit(member.id)}
-                                            className="p-1.5 text-green-600 hover:bg-green-100 rounded-full transition"
-                                            title="Guardar cambios"
-                                            disabled={isSaving}
-                                        >
-                                            <Save size={16} className="text-green-600" />
-                                        </button>
-                                        <button
-                                            onClick={handleCancelEdit}
-                                            className="p-1.5 text-gray-600 hover:bg-gray-100 rounded-full transition"
-                                            title="Cancelar edición"
-                                        >
-                                            <XCircle size={16} className="text-gray-600" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                /* Modo de visualización */
-                                <>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm">
-                                            {member.name.charAt(0)}
+                    {members.map((member) => {
+                        const isDeleting = deletingIds.has(member.id);
+                        const isNew = newMemberIds.has(member.id);
+                        
+                        const animationClasses = `
+                            ${isNew ? 'animate-pulse bg-green-50 scale-105 border-green-300' : ''}
+                            ${isDeleting ? 'animate-bounce scale-90 opacity-40 bg-red-50' : ''}
+                            transition-all duration-400 ease-in-out
+                        `;
+
+                        return (
+                            <li 
+                                key={member.id} 
+                                className={`flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-200 ${animationClasses}`}
+                            >
+                                {editingId === member.id ? (
+                                    /* Modo de edición */
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-sm">
+                                            {editData.name ? editData.name.charAt(0) : member.name.charAt(0)}
                                         </div>
-                                        <div>
-                                            <p className="font-semibold">{member.name}</p>
-                                            <p className="text-xs text-gray-500">{member.role || 'Sin rol'}</p>
+                                        <div className="flex gap-2 flex-1">
+                                            <input
+                                                type="text"
+                                                value={editData.name}
+                                                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1"
+                                                placeholder="Nombre"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={editData.role}
+                                                onChange={(e) => setEditData({ ...editData, role: e.target.value })}
+                                                className="p-1.5 border border-gray-300 rounded text-sm flex-1"
+                                                placeholder="Rol"
+                                            />
+                                        </div>
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={() => handleSaveEdit(member.id)}
+                                                className="p-1.5 text-green-600 hover:bg-green-100 rounded-full transition"
+                                                title="Guardar cambios"
+                                                disabled={isSaving}
+                                            >
+                                                <Save size={16} className="text-green-600" />
+                                            </button>
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="p-1.5 text-gray-600 hover:bg-gray-100 rounded-full transition"
+                                                title="Cancelar edición"
+                                            >
+                                                <XCircle size={16} className="text-gray-600" />
+                                            </button>
                                         </div>
                                     </div>
-                                    <div className="flex gap-1">
-                                        <button
-                                            onClick={() => handleEdit(member)}
-                                            className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition"
-                                            title="Editar miembro"
-                                        >
-                                            <Edit size={16} className="text-blue-600" />
-                                        </button>
-                                        <button
-                                            onClick={() => onDelete(member.id)}
-                                            className="p-2 text-red-600 hover:bg-red-100 rounded-full transition"
-                                            title="Eliminar miembro y todo su feedback asociado"
-                                        >
-                                            <Trash2 size={16} className="text-red-600" />
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </li>
-                    ))}
+                                ) : (
+                                    /* Modo de visualización */
+                                    <>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm">
+                                                {member.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{member.name}</p>
+                                                <p className="text-xs text-gray-500">{member.role || 'Sin rol'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={() => handleEdit(member)}
+                                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition"
+                                                title="Editar miembro"
+                                                disabled={isDeleting}
+                                            >
+                                                <Edit size={16} className="text-blue-600" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(member.id)}
+                                                className={`p-2 rounded-full transition ${
+                                                    isDeleting 
+                                                        ? 'text-red-400 cursor-not-allowed' 
+                                                        : 'text-red-600 hover:bg-red-100'
+                                                }`}
+                                                title="Eliminar miembro y todo su feedback asociado"
+                                                disabled={isDeleting}
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </li>
+                        );
+                    })}
                 </ul>
 
                 <button 
