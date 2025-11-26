@@ -107,7 +107,7 @@ class FeedbackController extends Controller
     {
         try {
             $this->feedbackServices->deleteFeedback($id);
-            return response()->json(null, 204);
+            return response()->json(['message' => 'Feedback deleted successfully'], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Feedback not found'

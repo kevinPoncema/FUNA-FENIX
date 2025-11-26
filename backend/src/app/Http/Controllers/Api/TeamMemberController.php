@@ -97,7 +97,7 @@ class TeamMemberController extends Controller
     {
         try {
             $this->teamMemberServices->deleteTeamMember((int)$id);
-            return response()->json(null, 204);
+            return response()->json(['message' => 'Team member deleted successfully'], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Team member not found'

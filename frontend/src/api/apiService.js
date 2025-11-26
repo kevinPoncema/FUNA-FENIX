@@ -34,7 +34,22 @@ class APIService {
 
         try {
             const response = await fetch(url, config);
-            const data = await response.json();
+            
+            // Verificar si la respuesta tiene contenido antes de parsearlo
+            const contentType = response.headers.get('content-type');
+            let data = null;
+            
+            if (contentType && contentType.includes('application/json')) {
+                const text = await response.text();
+                if (text.trim()) {
+                    try {
+                        data = JSON.parse(text);
+                    } catch (jsonError) {
+                        console.error('Invalid JSON response:', text);
+                        throw new Error('Invalid server response format');
+                    }
+                }
+            }
 
             if (!response.ok) {
                 // Si el token expiró, limpiar sesión
@@ -42,7 +57,7 @@ class APIService {
                     this.clearAuth();
                     throw new Error('Session expired. Please login again.');
                 }
-                throw new Error(data.message || data.error || 'API Error');
+                throw new Error(data?.message || data?.error || `HTTP Error: ${response.status}`);
             }
 
             return data;
