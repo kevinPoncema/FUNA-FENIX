@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TeamMemberDeleted
+class TeamMemberDeleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
@@ -32,7 +32,17 @@ class TeamMemberDeleted
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('team-members'),
+            new Channel('team-members'),
+        ];
+    }
+
+    /**
+     * Get the data to broadcast.
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'teamMemberId' => $this->teamMemberId,
         ];
     }
 }

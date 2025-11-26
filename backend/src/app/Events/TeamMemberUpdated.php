@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\TeamMember;
 
-class TeamMemberUpdated
+class TeamMemberUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
@@ -33,7 +33,17 @@ class TeamMemberUpdated
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('team-members'),
+            new Channel('team-members'),
+        ];
+    }
+
+    /**
+     * Get the data to broadcast.
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'teamMember' => $this->teamMember->toArray(),
         ];
     }
 }

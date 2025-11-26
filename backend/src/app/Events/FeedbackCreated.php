@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Feedback;
 
-class FeedbackCreated
+class FeedbackCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
@@ -33,7 +33,17 @@ class FeedbackCreated
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('feedbacks'),
+            new Channel('feedbacks'),
+        ];
+    }
+
+    /**
+     * Get the data to broadcast.
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'feedback' => $this->feedback->toArray(),
         ];
     }
 }
