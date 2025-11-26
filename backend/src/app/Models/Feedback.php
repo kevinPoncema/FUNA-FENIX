@@ -12,6 +12,7 @@ class Feedback extends Model
     protected $table = 'feedback';
     protected $fillable = [
         'target_id',
+        'owner_id',
         'category',
         'title',
         'text',
@@ -24,6 +25,11 @@ class Feedback extends Model
     public function target(): BelongsTo
     {
         return $this->belongsTo(TeamMember::class, 'target_id');
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
 }
