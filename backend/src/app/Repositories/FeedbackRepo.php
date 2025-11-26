@@ -9,27 +9,22 @@ class FeedbackRepo
         return Feedback::create($data);
     }
 
-    public function getFeedbackById(string $id): ?Feedback
+    public function getFeedbackById(string $id): Feedback
     {
-        return Feedback::find($id);
+        return Feedback::findOrFail($id);
     }
 
-    public function updateFeedback(string $id, array $data): ?Feedback
+    public function updateFeedback(string $id, array $data): Feedback
     {
-        $feedback = Feedback::find($id);
-        if ($feedback) {
-            $feedback->update($data);
-        }
+        $feedback = Feedback::findOrFail($id);
+        $feedback->update($data);
         return $feedback;
     }
 
     public function deleteFeedback(string $id): bool
     {
-        $feedback = Feedback::find($id);
-        if ($feedback) {
-            return $feedback->delete();
-        }
-        return false;
+        $feedback = Feedback::findOrFail($id);
+        return $feedback->delete();
     }
     public function getAllFeedbacks()
     {

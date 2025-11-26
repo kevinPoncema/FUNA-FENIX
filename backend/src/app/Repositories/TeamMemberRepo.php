@@ -9,9 +9,9 @@ class TeamMemberRepo
         return TeamMember::all();
     }
 
-    public function getTeamMemberById(int $id): ?TeamMember
+    public function getTeamMemberById(int $id): TeamMember
     {
-        return TeamMember::find($id);
+        return TeamMember::findOrFail($id);
     }
 
     public function createTeamMember(array $data): TeamMember
@@ -19,21 +19,16 @@ class TeamMemberRepo
         return TeamMember::create($data);
     }
 
-    public function updateTeamMember(int $id, array $data): ?TeamMember
+    public function updateTeamMember(int $id, array $data): TeamMember
     {
-        $teamMember = TeamMember::find($id);
-        if ($teamMember) {
-            $teamMember->update($data);
-        }
+        $teamMember = TeamMember::findOrFail($id);
+        $teamMember->update($data);
         return $teamMember;
     }
 
     public function deleteTeamMember(int $id): bool
     {
-        $teamMember = TeamMember::find($id);
-        if ($teamMember) {
-            return $teamMember->delete();
-        }
-        return false;
+        $teamMember = TeamMember::findOrFail($id);
+        return $teamMember->delete();
     }
 }

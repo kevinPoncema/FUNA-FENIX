@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFeedbackRequest;
 use App\Http\Requests\UpdateFeedbackRequest;
 use App\Http\Services\FeedbackServices;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class FeedbackController extends Controller
 {
@@ -19,40 +21,92 @@ class FeedbackController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return $this->feedbackServices->getAllFeedbacks();
+        try {
+            $feedbacks = $this->feedbackServices->getAllFeedbacks();
+            return response()->json($feedbacks, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving feedbacks',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFeedbackRequest $request)
+    public function store(StoreFeedbackRequest $request): JsonResponse
     {
-        return $this->feedbackServices->createFeedback($request->validated());
+        try {
+            $feedback = $this->feedbackServices->createFeedback($request->validated());
+            return response()->json($feedback, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating feedback',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        return $this->feedbackServices->getFeedbackById($id);
+        try {
+            $feedback = $this->feedbackServices->getFeedbackById($id);
+            return response()->json($feedback, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Feedback not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving feedback',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFeedbackRequest $request, string $id)
+    public function update(UpdateFeedbackRequest $request, string $id): JsonResponse
     {
-        return $this->feedbackServices->updateFeedback($id, $request->validated());
+        try {
+            $feedback = $this->feedbackServices->updateFeedback($id, $request->validated());
+            return response()->json($feedback, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Feedback not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error updating feedback',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        return $this->feedbackServices->deleteFeedback($id);
+        try {
+            $this->feedbackServices->deleteFeedback($id);
+            return response()->json(null, 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Feedback not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error deleting feedback',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

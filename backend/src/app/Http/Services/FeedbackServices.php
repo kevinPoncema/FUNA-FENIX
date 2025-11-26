@@ -1,13 +1,16 @@
 <?php
 namespace App\Http\Services;
 use App\Repositories\FeedbackRepo;
+
 class FeedbackServices
 {
     protected FeedbackRepo $feedbackRepo;
+
     public function __construct(FeedbackRepo $feedbackRepo)
     {
         $this->feedbackRepo = $feedbackRepo;
     }
+
     public function createFeedback(array $data)
     {
         return $this->feedbackRepo->createFeedback($data);
