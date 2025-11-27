@@ -35,6 +35,6 @@ class TeamMemberRepo
 
     public function getAllTeamMembersWithFeedbacks(): Collection
     {
-        return TeamMember::with('feedbacks')->get();
+        return TeamMember::with(['feedbacks.owner'])->get();
     }
 }

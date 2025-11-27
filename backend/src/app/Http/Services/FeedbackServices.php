@@ -55,18 +55,27 @@ class FeedbackServices
     }
 
     /**
-     * Validar que el usuario actual sea el owner del feedback
+     * Validar que el usuario actual sea el owner del feedback o sea admin
      */
     private function validateOwnership($feedback)
     {
-        $currentUserId = auth()->id();
+        $currentUser = auth()->user();
         
-        if (!$currentUserId) {
+        if (!$currentUser) {
             throw new AuthenticationException('Usuario no autenticado');
         }
 
-        if ($feedback->owner_id !== $currentUserId) {
-            throw new AuthorizationException('No autorizado. Solo el propietario puede modificar este feedback.');
+        // Permitir si es el propietario del feedback
+        if ($feedback->owner_id === $currentUser->id) {
+            return;
         }
+
+        // Permitir si es admin
+        if ($currentUser->role === 'admin') {
+            return;
+        }
+
+        // Si no es ni propietario ni admin, denegar acceso
+        throw new AuthorizationException('No autorizado. Solo el propietario o un administrador pueden modificar este feedback.');
     }
 }

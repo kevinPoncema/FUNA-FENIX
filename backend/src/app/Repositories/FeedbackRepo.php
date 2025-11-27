@@ -28,6 +28,6 @@ class FeedbackRepo
     }
     public function getAllFeedbacks()
     {
-        return Feedback::all();
+        return Feedback::with(['target', 'owner'])->get();
     }
 }
