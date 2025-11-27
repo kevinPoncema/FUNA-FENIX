@@ -127,7 +127,7 @@ const App = () => {
     return (
         <div className="app-container">
             {/* Información del Usuario */}
-            <UserInfo user={user} onLogout={isAdmin ? handleLogout : null} />
+            <UserInfo user={user} onLogout={handleLogout} />
 
             {/* Header */}
             <Header />
