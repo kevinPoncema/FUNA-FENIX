@@ -1,7 +1,18 @@
 # FUNA FENIX - Aplicación de Retroalimentación de Equipo 🔥
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docs.docker.com/)
-[![Laravel](https://img.shields.io/badge/Laravel-11-red.svg)](https://laravel.com/)
+[![Laravel](https://img.shields.io/badge/Laravel-11-red.svg)](https:/**🎨 Interfaz de Usuario**
+- Diseño responsivo co│   └── 📁 frontend/                # Documentación frontend  
+│       ├── 📄 STRUCTURE_CONFIGURATION.md # Estructura y configuración
+│       ├── 📄 COMPONENTS_STATE.md       # Componentes y estado
+│  ```
+
+## 🔍 Verificación y Salud  └── 📄 API_WEBSOCKET.md           # API y WebSocket clienteilwind CSS
+- Animaciones suaves y transiciones
+- Modo claro/oscuro
+- Experiencia móvil optimizada
+
+### 🛠️ Tecnologías Utilizadasl.com/)
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
 [![WebSocket](https://img.shields.io/badge/WebSocket-Soketi-green.svg)](https://soketi.app/)
 
@@ -16,9 +27,7 @@ Una aplicación web moderna y escalable desarrollada para facilitar la retroalim
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [API y WebSocket](#-api-y-websocket)
 - [Documentación Completa](#-documentación-completa)
-- [Comandos de Desarrollo](#-comandos-de-desarrollo)
-- [Verificación y Salud](#-verificación-y-salud)
-- [Solución de Problemas](#️-solución-de-problemas)
+- [Solución de Problemas](#-solución-de-problemas)
 - [Contribución](#-contribución)
 
 ## 🎯 Propósito y Características
@@ -28,7 +37,7 @@ Desarrollada específicamente para realizar actividades de retroalimentación de
 
 ### ✨ Características Principales
 
-- **🔄 Retroalimentación en Tiempo Real**: Actualizaciones instantáneas vía WebSockets
+- **🔄 Retroalimentación en Tiempo Real**: Actualizaciones instantáneas via WebSockets
 - **📊 Sistema de Categorías**: Logros, cualidades y potencial de crecimiento
 - **🔐 Autenticación Segura**: Laravel Sanctum con control de roles
 - **🎨 Interfaz Intuitiva**: Diseño moderno tipo post-it notes con Tailwind CSS
@@ -206,7 +215,7 @@ QUEUE_WORKER=true
 
 **💬 Gestión de Feedback**
 - Creación de feedback por categorías (Logros, Cualidades, Crecimiento)
-- Visualización en tiempo real vía WebSocket
+- Visualización en tiempo real via WebSocket
 - Eliminación solo por owner/admin
 - Interfaz tipo post-it interactiva
 
@@ -226,7 +235,7 @@ QUEUE_WORKER=true
 - Modo claro/oscuro
 - Experiencia móvil optimizada
 
-### 🛠️ Tecnologías Utilizadas
+### � Tecnologías Utilizadas
 
 **🌟 Frontend Stack**
 - **React 18**: Hooks, Context API, Componentes funcionales
@@ -264,7 +273,7 @@ FUNA-FENIX/
 │   │   ├── 📄 ARCHITECTURE.md           # Arquitectura Laravel
 │   │   └── 📄 CONFIGURATION.md          # Variables y configuración
 │   └── 📁 frontend/                # Documentación frontend  
-│       ├── 📄 STRUCTURE_CONFIGURATION.md # Estructura y configuración
+│       ├── � STRUCTURE_CONFIGURATION.md # Estructura y configuración
 │       ├── 📄 COMPONENTS_STATE.md       # Componentes y estado
 │       └── 📄 API_WEBSOCKET.md           # API y WebSocket cliente
 ├── 📁 backend/                      # Aplicación Laravel
@@ -293,29 +302,29 @@ FUNA-FENIX/
 │       │   ├── 📁 migrations/     # Esquemas de BD
 │       │   ├── 📁 seeders/        # Datos de prueba
 │       │   └── 📁 factories/      # Generadores de datos
-│       └── 📁 routes/
-│           ├── api.php            # Rutas API REST
-│           ├── channels.php       # Canales WebSocket
-│           └── web.php            # Rutas web
-└── 📁 frontend/                    # Aplicación React
-    ├── 📄 dockerfile              # Imagen Node.js/React
-    ├── 📄 package.json            # Dependencias y scripts
-    ├── 📄 vite.config.js          # Configuración Vite
-    └── 📁 src/                     # Código fuente React
-        ├── 📁 api/                # Servicios API
-        │   ├── apiService.js      # Cliente HTTP principal
-        │   ├── constants.js       # Constantes y URLs
-        │   ├── echo.js            # Configuración WebSocket
-        │   └── useAPI.js          # Hooks personalizados
-        ├── 📁 components/         # Componentes React
-        │   ├── AuthenticationModal.jsx
-        │   ├── FeedbackFormModal.jsx
-        │   ├── Header.jsx
-        │   ├── MainBoard.jsx      # Tablero principal
-        │   ├── PostItNote.jsx     # Notas de feedback
-        │   └── index.js           # Exportaciones
-        ├── App.jsx                # Componente raíz
-        └── main.jsx               # Punto de entrada
+        │       └── 📁 routes/
+        │           ├── api.php            # Rutas API REST
+        │           ├── channels.php       # Canales WebSocket
+        │           └── web.php            # Rutas web
+        └── 📁 frontend/                    # Aplicación React
+            ├── 📄 dockerfile              # Imagen Node.js/React
+            ├── 📄 package.json            # Dependencias y scripts
+            ├── 📄 vite.config.js          # Configuración Vite
+            └── 📁 src/                     # Código fuente React
+                ├── 📁 api/                # Servicios API
+                │   ├── apiService.js      # Cliente HTTP principal
+                │   ├── constants.js       # Constantes y URLs
+                │   ├── echo.js            # Configuración WebSocket
+                │   └── useAPI.js          # Hooks personalizados
+                ├── 📁 components/         # Componentes React
+                │   ├── AuthenticationModal.jsx
+                │   ├── FeedbackFormModal.jsx
+                │   ├── Header.jsx
+                │   ├── MainBoard.jsx      # Tablero principal
+                │   ├── PostItNote.jsx     # Notas de feedback
+                │   └── index.js           # Exportaciones
+                ├── App.jsx                # Componente raíz
+                └── main.jsx               # Punto de entrada
 ```
 
 ## 🔌 API y WebSocket
@@ -463,7 +472,7 @@ docker compose exec database mysqldump -u fenix_user -p fenix_feedback > backup.
 docker compose exec database mysql -u fenix_user -p fenix_feedback < backup.sql
 ```
 
-## 🔍 Verificación y Salud
+## � Verificación y Salud
 
 ### HealthChecks Rápidos
 ```bash
@@ -679,4 +688,5 @@ Esta aplicación fue desarrollada específicamente para mejorar las dinámicas d
 **🚀 Actualizaciones**: Seguir el changelog en releases de GitHub
 
 ---
+*Última actualización: Noviembre 2024 | Versión: 1.0*
 *Última actualización: Noviembre 2024 | Versión: 1.0*
