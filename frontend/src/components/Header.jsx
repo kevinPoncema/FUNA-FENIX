@@ -6,24 +6,28 @@ import { Zap, User, ChevronsUp } from 'lucide-react';
  */
 const Header = () => {
     return (
-        <header className="text-center mb-4 md:mb-8 bg-black/40 p-3 md:p-4 rounded-xl shadow-2xl">
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-green-300 tracking-wider font-serif">
+        <header className="retrospective-header">
+            <h1 className="retrospective-title">
                 Retrospectiva de Equipo
             </h1>
-            <p className="text-sm md:text-lg lg:text-xl text-white/90 mt-2">
+            <p className="retrospective-subtitle">
                 La Pizarra del Crecimiento (Acciones, Esenciales, Potencial)
             </p>
-            {/* Títulos de Categoría en la cabecera (para guía visual) */}
-            <div className="mt-4 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 md:gap-10 text-sm md:text-lg font-bold text-white/90">
-                <span className="text-green-300 flex items-center justify-center gap-1">
-                    <Zap size={14} md:size={16} className="text-green-300" /> Logros
-                </span>
-                <span className="text-yellow-200 flex items-center justify-center gap-1">
-                    <User size={14} md:size={16} className="text-yellow-200" /> Cualidades
-                </span>
-                <span className="text-cyan-300 flex items-center justify-center gap-1">
-                    <ChevronsUp size={14} md:size={16} className="text-cyan-300" /> Potencial
-                </span>
+            
+            {/* Navegación de categorías horizontal sin bordes */}
+            <div className="flex justify-center gap-8 mt-6">
+                <div className="flex items-center gap-2 text-green-400 font-semibold">
+                    <Zap size={20} /> 
+                    <span>Logros</span>
+                </div>
+                <div className="flex items-center gap-2 text-yellow-400 font-semibold">
+                    <User size={20} /> 
+                    <span>Cualidades</span>
+                </div>
+                <div className="flex items-center gap-2 text-blue-400 font-semibold">
+                    <ChevronsUp size={20} /> 
+                    <span>Potencial</span>
+                </div>
             </div>
         </header>
     );

@@ -7,7 +7,7 @@ import MemberRow from './MemberRow.jsx';
  */
 const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDetail, webSocketFeedbackIds }) => {
     return (
-        <main className="bg-black/40 p-2 md:p-4 rounded-xl shadow-inner border border-white/20 w-full overflow-x-auto">
+        <main className="board-container">
             {teamMembers.length > 0 ? (
                 <div className="w-full">
                     {teamMembers.map((member) => (
@@ -24,9 +24,9 @@ const MainBoard = ({ teamMembers, feedbackData, userId, deleteFeedback, onOpenDe
                 </div>
             ) : (
                 <div className="text-center p-10 text-white/70">
-                    <Users size={32} className="mx-auto mb-4"/>
-                    <p className="text-lg font-semibold">No hay miembros registrados.</p>
-                    <p className="text-sm">Usa el botón "Administrar Equipo" para empezar a agregar personas.</p>
+                    <Users size={48} className="mx-auto mb-4 text-white/50"/>
+                    <p className="text-xl font-semibold">No hay miembros registrados.</p>
+                    <p className="text-base mt-2">Usa el botón "Administrar Equipo" para empezar a agregar personas.</p>
                 </div>
             )}
         </main>

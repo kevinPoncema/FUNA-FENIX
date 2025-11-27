@@ -68,15 +68,18 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
 
     return (
         <div 
-            className={`relative p-3 md:p-4 shadow-lg rounded-sm transform cursor-pointer ${colorClass} w-40 h-44 md:w-48 md:h-52 lg:w-52 lg:h-56 flex flex-col justify-between ${animationClasses}`} 
-            style={{ transform: `rotate(${rotation}deg)` }}
+            className={`relative p-3 md:p-4 shadow-xl rounded-lg transform cursor-pointer ${colorClass} w-40 h-44 md:w-48 md:h-52 lg:w-52 lg:h-56 flex flex-col justify-between ${animationClasses}`} 
+            style={{ 
+                transform: `rotate(${rotation}deg)`,
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+            }}
         >
             <div 
                 className="absolute inset-0 z-10 p-3 md:p-4 flex flex-col justify-between"
                 onClick={() => onOpenDetail(feedback)}
             >
-                <p className="text-sm md:text-base font-bold mb-2 italic opacity-90 flex items-center gap-1 text-gray-800 border-b border-gray-400/50 pb-1">
-                    <Icon size={14} md:size={16} className="text-gray-800" />
+                <p className="text-sm md:text-base font-bold mb-2 italic opacity-90 flex items-center gap-1 border-b border-black/20 pb-1">
+                    <Icon size={14} md:size={16} />
                     <span className="hidden sm:inline">{categoryInfo.label}</span>
                 </p>
                 

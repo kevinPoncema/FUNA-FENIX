@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { ThumbsUp, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react';
+import { ThumbsUp, User, TrendingUp } from 'lucide-react';
 import PostItNote from './PostItNote.jsx';
 
 /**
@@ -27,21 +27,21 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
             id: 'achievements', 
             title: 'Logros', 
             icon: ThumbsUp, 
-            color: 'bg-green-300', 
+            color: 'post-it-achievements', 
             filter: 'achievements' 
         },
         { 
             id: 'qualities', 
             title: 'Cualidades', 
-            icon: AlertTriangle, 
-            color: 'bg-blue-300', 
+            icon: User, 
+            color: 'post-it-qualities', 
             filter: 'qualities' 
         },
         { 
             id: 'potential', 
             title: 'Potencial', 
             icon: TrendingUp, 
-            color: 'bg-yellow-300', 
+            color: 'post-it-potential', 
             filter: 'potential' 
         },
     ];
@@ -68,17 +68,17 @@ const MemberRow = ({ member, feedbackData, currentUserId, deleteFeedback, onOpen
         <div className={`flex flex-col lg:flex-row border-b border-white/10 py-4 items-start gap-4 hover:bg-black/20 transition-all duration-300 w-full ${memberAnimationClasses}`}>
             
             {/* Columna de Miembro (Izquierda) */}
-            <div className="w-full lg:w-48 flex flex-row lg:flex-col items-center justify-start lg:justify-center p-2 pt-4 flex-shrink-0 gap-4 lg:gap-0">
-                <div className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-indigo-500/80 text-white flex items-center justify-center text-xl lg:text-2xl font-extrabold border-2 border-white shadow-xl transition-all duration-300 ${
-                    justCreated ? 'ring-4 ring-purple-400 ring-opacity-75' : ''
+            <div className="w-full lg:w-48 flex flex-row lg:flex-col items-center justify-start lg:justify-center p-4 flex-shrink-0 gap-4 lg:gap-0">
+                <div className={`member-avatar w-16 h-16 lg:w-20 lg:h-20 rounded-full text-white flex items-center justify-center text-xl lg:text-2xl font-extrabold transition-all duration-300 ${
+                    justCreated ? 'ring-4 ring-purple-400 ring-opacity-75 animate-pulse' : ''
                 }`}>
-                    {member.name.charAt(0)}
+                    {member.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="text-left lg:text-center">
-                    <h3 className="text-sm lg:text-base font-bold text-white mt-0 lg:mt-2">{member.name}</h3>
-                    <p className="text-xs text-indigo-300">({member.role})</p>
+                    <h3 className="text-base lg:text-lg font-bold text-white mt-0 lg:mt-3">{member.name}</h3>
+                    <p className="text-sm text-white/70 font-medium">({member.role})</p>
                     {justCreated && (
-                        <p className="text-xs text-purple-300 mt-1 animate-bounce">¡Nuevo!</p>
+                        <p className="text-xs text-purple-300 mt-1 animate-bounce font-semibold">¡Nuevo!</p>
                     )}
                 </div>
             </div>

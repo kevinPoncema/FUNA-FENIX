@@ -101,12 +101,7 @@ const App = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen p-6 font-sans bg-cover bg-fixed"
-                style={{ 
-                    backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
-                    backgroundBlendMode: 'multiply', 
-                    backgroundColor: '#2f5b40' 
-                }}>
+            <div className="app-container">
                 <ErrorDisplay error={error} onRetry={clearError} />
             </div>
         );
@@ -115,56 +110,22 @@ const App = () => {
     // Si no está autenticado, mostrar solo el modal de login
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-cover bg-fixed"
-                style={{ 
-                    backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
-                    backgroundBlendMode: 'multiply', 
-                    backgroundColor: '#2f5b40' 
-                }}>
-                <AuthenticationModal
-                    isVisible={isLoginModalOpen}
-                    onClose={() => setIsLoginModalOpen(false)}
-                    onLoginAsAdmin={handleLoginAsAdmin}
-                    onLoginAsGuest={handleLoginAsGuest}
-                    authMode={authMode}
-                />
+            <div className="app-container">
+                <div className="min-h-screen flex items-center justify-center">
+                    <AuthenticationModal
+                        isVisible={isLoginModalOpen}
+                        onClose={() => setIsLoginModalOpen(false)}
+                        onLoginAsAdmin={handleLoginAsAdmin}
+                        onLoginAsGuest={handleLoginAsGuest}
+                        authMode={authMode}
+                    />
+                </div>
             </div>
         );
     }
 
     return (
-        <div 
-            className="min-h-screen w-screen p-2 md:p-4 font-sans overflow-x-hidden"
-            style={{ 
-                backgroundImage: `url('https://placehold.co/1920x1080/2f5b40/fff?text=Pizarra+Verde')`, 
-                backgroundBlendMode: 'multiply', 
-                backgroundColor: '#2f5b40',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundAttachment: 'fixed'
-            }}
-        >
-            {/* Estilo CSS para el scrollbar personalizado */}
-            <style>
-                {`
-                    .custom-scrollbar::-webkit-scrollbar {
-                        width: 5px;
-                        height: 5px;
-                    }
-                    .custom-scrollbar::-webkit-scrollbar-thumb {
-                        background-color: rgba(0, 0, 0, 0.2);
-                        border-radius: 10px;
-                    }
-                    .custom-scrollbar::-webkit-scrollbar-track {
-                        background-color: transparent;
-                    }
-                    .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-                        background-color: rgba(0, 0, 0, 0.4);
-                    }
-                `}
-            </style>
-            
+        <div className="app-container">
             {/* Información del Usuario */}
             <UserInfo user={user} onLogout={isAdmin ? handleLogout : null} />
 
