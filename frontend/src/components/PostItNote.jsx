@@ -8,6 +8,12 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
     const [isDeleting, setIsDeleting] = useState(false);
     const [justCreated, setJustCreated] = useState(false);
 
+    // Función para truncar texto
+    const truncateText = (text, maxLength) => {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
     // Detectar si es un feedback recién creado localmente
     useEffect(() => {
         const now = Date.now();
@@ -68,49 +74,51 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
 
     return (
         <div 
-            className={`relative p-3 md:p-4 shadow-xl rounded-lg transform cursor-pointer ${colorClass} w-40 h-44 md:w-48 md:h-52 lg:w-52 lg:h-56 flex flex-col justify-between ${animationClasses}`} 
+            className={`relative p-3 md:p-4 shadow-xl rounded-lg transform cursor-pointer ${colorClass} w-40 h-44 md:w-48 md:h-52 lg:w-52 lg:h-56 flex flex-col ${animationClasses}`} 
             style={{ 
                 transform: `rotate(${rotation}deg)`,
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
             }}
         >
+            {/* Botón X rojo en la esquina superior derecha */}
+            <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className={`absolute top-2 right-2 w-6 h-6 rounded-full transition-all duration-200 z-20 flex items-center justify-center ${
+                    isDeleting 
+                        ? 'bg-red-300 cursor-not-allowed scale-90' 
+                        : 'bg-red-500 hover:bg-red-600 hover:scale-110 active:scale-95'
+                }`}
+                title="Eliminar post-it"
+            >
+                <X size={12} className="text-white font-bold" />
+            </button>
+
             <div 
-                className="absolute inset-0 z-10 p-3 md:p-4 flex flex-col justify-between"
+                className="flex flex-col h-full p-1 z-10"
                 onClick={() => onOpenDetail(feedback)}
             >
-                <p className="text-sm md:text-base font-bold mb-2 italic opacity-90 flex items-center gap-1 border-b border-black/20 pb-1">
-                    <Icon size={14} md:size={16} />
-                    <span className="hidden sm:inline">{categoryInfo.label}</span>
-                </p>
+                {/* Header con categoría */}
+                <div className="flex items-center gap-1 border-b border-black/20 pb-2 mb-3">
+                    <Icon size={14} />
+                    <span className="text-xs font-bold opacity-80 hidden sm:inline truncate">{categoryInfo.label}</span>
+                </div>
                 
                 {/* Título del Post-it */}
-                <h5 className="text-base md:text-xl font-extrabold text-gray-900 mb-2 leading-tight overflow-hidden whitespace-nowrap overflow-ellipsis">
-                    {feedback.title}
+                <h5 className="text-sm md:text-base font-extrabold leading-tight mb-3">
+                    {truncateText(feedback.title, 30)}
                 </h5>
 
-                {/* Contenido con scroll */}
-                <p className="text-sm md:text-base text-gray-800 whitespace-pre-wrap overflow-y-auto custom-scrollbar h-full pr-1"> 
-                    {feedback.text}
-                </p> 
+                {/* Contenido limitado */}
+                <div className="flex-1 overflow-hidden">
+                    <p className="text-xs md:text-sm leading-relaxed line-clamp-4 break-words"> 
+                        {truncateText(feedback.text, 80)}
+                    </p>
+                </div>
             </div>
 
-            {isAuthor && (
-                <button
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className={`absolute -top-3 -right-3 w-8 h-8 text-white transition-all duration-200 shadow-lg z-20 border-2 border-white flex items-center justify-center ${
-                        isDeleting 
-                            ? 'bg-red-300 cursor-not-allowed scale-90' 
-                            : 'bg-red-500 hover:bg-red-600 hover:scale-110 active:scale-95'
-                    }`}
-                    title="Eliminar mi post-it"
-                >
-                    <Trash2 size={16} className="text-white" />
-                </button>
-            )}
-
             {/* Ícono de Zoom */}
-            <ZoomIn size={16} className="absolute bottom-2 right-2 text-gray-500 opacity-60 z-0"/>
+            <ZoomIn size={14} className="absolute bottom-2 right-2 opacity-40 z-0"/>
         </div>
     );
 };
