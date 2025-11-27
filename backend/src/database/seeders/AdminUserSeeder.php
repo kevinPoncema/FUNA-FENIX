@@ -19,7 +19,7 @@ class AdminUserSeeder extends Seeder
             User::create([
                 'name' => 'Kevin Ponce',
                 'email' => 'kevin.ponce@fenix.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('kevinPaswordFenix2025!'),
                 'role' => 'admin',
                 'guest_hash' => null,
                 'email_verified_at' => now(),
@@ -31,7 +31,7 @@ class AdminUserSeeder extends Seeder
             User::create([
                 'name' => 'Diego Moys',
                 'email' => 'diego.moys@fenix.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('MoysPasswordFenix2025!'),
                 'role' => 'admin',
                 'guest_hash' => null,
                 'email_verified_at' => now(),
@@ -43,7 +43,7 @@ class AdminUserSeeder extends Seeder
             User::create([
                 'name' => 'Administrator',
                 'email' => 'admin@example.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('fenixMaster2025$!'),
                 'role' => 'admin',
                 'guest_hash' => null,
                 'email_verified_at' => now(),
