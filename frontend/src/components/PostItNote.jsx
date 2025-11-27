@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { X, ThumbsUp, User, Lightbulb, ZoomIn, TrendingUp, Trash2 } from 'lucide-react';
 
 /**
  * Componente para una única nota Post-it
@@ -35,18 +34,18 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
     const getCategoryInfo = (category) => {
         switch(category) {
             case 'achievements':
-                return { icon: ThumbsUp, label: 'Logros' };
+                return { icon: '👍', label: 'Logros' };
             case 'qualities':
-                return { icon: User, label: 'Cualidades' };
+                return { icon: '👤', label: 'Cualidades' };
             case 'potential':
-                return { icon: TrendingUp, label: 'Potencial' };
+                return { icon: '📈', label: 'Potencial' };
             default:
-                return { icon: Lightbulb, label: 'Feedback' };
+                return { icon: '💡', label: 'Feedback' };
         }
     };
 
     const categoryInfo = getCategoryInfo(feedback.category);
-    const Icon = categoryInfo.icon;
+    const categoryIcon = categoryInfo.icon;
     
     const rotation = useMemo(() => {
         const min = -1;
@@ -80,18 +79,18 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
             }}
         >
-            {/* Botón X rojo en la esquina superior derecha */}
+            {/* Botón de eliminar compacto */}
             <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className={`absolute top-2 right-2 w-6 h-6 rounded-full transition-all duration-200 z-20 flex items-center justify-center ${
+                className={`absolute top-2 right-2 w-6 h-6 text-sm font-bold rounded-full transition-all duration-200 z-20 flex items-center justify-center shadow-sm ${
                     isDeleting 
-                        ? 'bg-red-300 cursor-not-allowed scale-90' 
-                        : 'bg-red-500 hover:bg-red-600 hover:scale-110 active:scale-95'
+                        ? 'bg-red-300 text-red-700 cursor-not-allowed scale-90' 
+                        : 'bg-red-500 text-white hover:bg-red-600 hover:scale-110 active:scale-95'
                 }`}
-                title="Eliminar post-it"
+                title="Eliminar este post-it permanentemente"
             >
-                <X size={12} className="text-white font-bold" />
+                ×
             </button>
 
             <div 
@@ -100,7 +99,7 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
             >
                 {/* Header con categoría */}
                 <div className="flex items-center gap-1 border-b border-black/20 pb-2 mb-3">
-                    <Icon size={14} />
+                    <span className="text-sm">{categoryIcon}</span>
                     <span className="text-xs font-bold opacity-80 hidden sm:inline truncate">{categoryInfo.label}</span>
                 </div>
                 
@@ -118,7 +117,9 @@ const PostItNote = ({ feedback, colorClass, onDelete, isAuthor, onOpenDetail, we
             </div>
 
             {/* Ícono de Zoom */}
-            <ZoomIn size={14} className="absolute bottom-2 right-2 opacity-40 z-0"/>
+            <div className="absolute bottom-2 right-2 w-4 h-4 bg-black bg-opacity-20 rounded-full flex items-center justify-center text-xs text-white opacity-40 z-0">
+                +
+            </div>
         </div>
     );
 };
