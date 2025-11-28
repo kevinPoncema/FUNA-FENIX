@@ -39,7 +39,11 @@ class AuthService
 
         // Si no se encontró usuario o no se proporcionó hash, crear nuevo invitado
         $newHash = Str::uuid()->toString();
-        $user = $this->authRepo->createGuest($name, $newHash);
+        
+        // Hashear el nombre para mantener anonimato
+        $hashedName = $this->hashGuestName($name);
+        
+        $user = $this->authRepo->createGuest($hashedName, $newHash);
         $token = $this->authRepo->issueToken($user, 'guest-token', ['guest']);
 
         return [
@@ -47,6 +51,16 @@ class AuthService
             'token' => $token,
             'hash' => $newHash
         ];
+    }
+
+    /**
+     * Hashea el nombre de un usuario invitado para mantener anonimato
+     */
+    private function hashGuestName(string $name): string
+    {
+        // Usar SHA-256 para hashear el nombre + un salt único por timestamp
+        $salt = 'guest_' . now()->timestamp . '_' . Str::random(8);
+        return hash('sha256', $name . $salt);
     }
 
     /**

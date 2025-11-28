@@ -9,6 +9,7 @@ export const useAPI = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
+    const [originalUserName, setOriginalUserName] = useState(null); // Nombre original del usuario guest
     const [teamMembers, setTeamMembers] = useState([]);
     const [feedbackData, setFeedbackData] = useState([]);
     const [isInitialized, setIsInitialized] = useState(false);
@@ -69,6 +70,16 @@ export const useAPI = () => {
                 // Verificar si ya está autenticado
                 if (apiService.isAuthenticated()) {
                     setUser(apiService.getCurrentUser());
+                    
+                    // Recuperar nombre original desde localStorage si es guest
+                    const currentUser = apiService.getCurrentUser();
+                    if (currentUser && currentUser.role === 'guest') {
+                        const savedOriginalName = localStorage.getItem('originalUserName');
+                        if (savedOriginalName) {
+                            setOriginalUserName(savedOriginalName);
+                        }
+                    }
+                    
                     await loadData();
                     setIsInitialized(true);
                 } else {
@@ -228,6 +239,17 @@ export const useAPI = () => {
             setIsLoading(true);
             const result = await apiService.loginAsGuest(name);
             setUser(result.user);
+            
+            // Guardar el nombre original que ingresó el usuario para mostrar en UI
+            if (name && name.trim()) {
+                setOriginalUserName(name.trim());
+                // También guardarlo en localStorage para persistencia
+                localStorage.setItem('originalUserName', name.trim());
+            } else {
+                setOriginalUserName('Invitado Anónimo');
+                localStorage.setItem('originalUserName', 'Invitado Anónimo');
+            }
+            
             await loadData();
             setIsInitialized(true);
             return result;
@@ -243,9 +265,13 @@ export const useAPI = () => {
         try {
             await apiService.logout();
             setUser(null);
+            setOriginalUserName(null);
             setTeamMembers([]);
             setFeedbackData([]);
             setIsInitialized(false);
+            
+            // Limpiar localStorage
+            localStorage.removeItem('originalUserName');
         } catch (error) {
             handleError(error);
         }
@@ -379,6 +405,7 @@ export const useAPI = () => {
         isLoading,
         error,
         user,
+        originalUserName,
         userId: user?.id,
         teamMembers,
         feedbackData,

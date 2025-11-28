@@ -21,6 +21,7 @@ const App = () => {
         isLoading, 
         error, 
         user,
+        originalUserName,
         userId, 
         teamMembers, 
         isAdmin,
@@ -127,7 +128,11 @@ const App = () => {
     return (
         <div className="app-container">
             {/* Información del Usuario */}
-            <UserInfo user={user} onLogout={handleLogout} />
+            <UserInfo 
+                user={user} 
+                originalUserName={originalUserName}
+                onLogout={handleLogout} 
+            />
 
             {/* Header */}
             <Header />
