@@ -103,7 +103,20 @@ class DataExportCommand extends Command
 
                 Storage::disk('local')->put($path, json_encode($exportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                 $storagePath = storage_path("app/{$path}");
-                $this->info("Data exported to: {$storagePath}");
+                $this->info("📁 Data exported to: {$storagePath}");
+
+                // Verificar que el archivo se creó correctamente
+                if (Storage::disk('local')->exists($path)) {
+                    $fileSize = Storage::disk('local')->size($path);
+                    $this->info("✅ File created successfully ({$fileSize} bytes)");
+
+                    // Mostrar ruta relativa desde el proyecto
+                    $relativePath = "backend/src/storage/app/{$path}";
+                    $this->info("📍 Relative path from project root: {$relativePath}");
+                } else {
+                    $this->error("❌ File was not created successfully");
+                    return 1;
+                }
             }
 
             $this->info("Export completed successfully!");
