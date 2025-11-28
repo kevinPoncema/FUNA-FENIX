@@ -38,6 +38,16 @@ class AuthRepo
     }
 
     /**
+     * Busca un usuario invitado por su nombre hasheado
+     */
+    public function findGuestByHashedName(string $hashedName): ?User
+    {
+        return User::where('name', $hashedName)
+                  ->where('role', 'guest')
+                  ->first();
+    }
+
+    /**
      * Crea un nuevo usuario invitado
      */
     public function createGuest(string $name, string $hash): User

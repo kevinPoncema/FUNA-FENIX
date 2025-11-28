@@ -22,7 +22,10 @@ class AuthService
      */
     public function loginGuest(string $name, string $providedHash = null): array
     {
-        // Si se proporciona un hash, intentar encontrar al usuario existente
+        // Generar hash del nombre para buscar usuario existente
+        $hashedName = $this->hashGuestName($name);
+        
+        // Si se proporciona un hash, intentar encontrar al usuario existente por hash
         if ($providedHash) {
             $user = $this->authRepo->findGuestByHash($providedHash);
 
@@ -37,12 +40,21 @@ class AuthService
             }
         }
 
-        // Si no se encontró usuario o no se proporcionó hash, crear nuevo invitado
+        // Buscar usuario existente por nombre hasheado
+        $existingUser = $this->authRepo->findGuestByHashedName($hashedName);
+        
+        if ($existingUser) {
+            // Usuario existe, generar token y retornar
+            $token = $this->authRepo->issueToken($existingUser, 'guest-token', ['guest']);
+            return [
+                'user' => $existingUser,
+                'token' => $token,
+                'hash' => $existingUser->hash ?? Str::uuid()->toString()
+            ];
+        }
+
+        // Si no existe, crear nuevo invitado
         $newHash = Str::uuid()->toString();
-        
-        // Hashear el nombre para mantener anonimato
-        $hashedName = $this->hashGuestName($name);
-        
         $user = $this->authRepo->createGuest($hashedName, $newHash);
         $token = $this->authRepo->issueToken($user, 'guest-token', ['guest']);
 
@@ -55,12 +67,12 @@ class AuthService
 
     /**
      * Hashea el nombre de un usuario invitado para mantener anonimato
+     * Usa el mismo algoritmo que el comando HashUserNames
      */
     private function hashGuestName(string $name): string
     {
-        // Usar SHA-256 para hashear el nombre + un salt único por timestamp
-        $salt = 'guest_' . now()->timestamp . '_' . Str::random(8);
-        return hash('sha256', $name . $salt);
+        // Usar SHA-256 simple como en el comando HashUserNames
+        return hash('sha256', $name);
     }
 
     /**
