@@ -13,14 +13,14 @@ class HashUserNames extends Command
      *
      * @var string
      */
-    protected $signature = 'data:hash-user-names';
+    protected $signature = 'data:hash-users';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Hash the names of all users with the role "guest" using SHA-256';
 
     /**
      * Execute the console command.
